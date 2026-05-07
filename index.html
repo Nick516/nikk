@@ -1,1282 +1,3212 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Николай Ростов - Персонаж романа "Война и мир"</title>
+    <title>Room Roast — AI judges your space. Brutally.</title>
+    <meta name="description" content="Upload your room photo. AI roasts your interior design and shows you the glow-up. How expensive does your room look?">
+    <meta property="og:title" content="Room Roast — AI judges your space. Brutally.">
+    <meta property="og:description" content="Get your room roasted by AI. Score, fixes, and redesign in seconds.">
+    <meta property="og:image" content="https://roomroast.app/og-image.jpg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        * {
+        /* ============================================
+           RESET & BASE
+        ============================================ */
+        *, *::before, *::after {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
+        :root {
+            --bg: #0A0A0A;
+            --surface: #141414;
+            --surface2: #1E1E1E;
+            --border: #2A2A2A;
+            --primary: #E8D5B7;
+            --secondary: #6B6B6B;
+            --accent: #FF6B35;
+            --score-red: #FF3B30;
+            --score-yellow: #FFD60A;
+            --score-green: #30D158;
+            --gold: #D4AF37;
+            --white: #FFFFFF;
+
+            --font-display: 'Playfair Display', serif;
+            --font-body: 'Inter', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+
+            --radius: 16px;
+            --radius-sm: 8px;
+            --radius-lg: 24px;
+
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        html {
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(to bottom, #f0f9ff, #e0f2fe);
-            color: #333;
+            background: var(--bg);
+            color: var(--primary);
+            font-family: var(--font-body);
+            font-size: 16px;
             line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* Шапка */
-        header {
-            background: linear-gradient(to right, #1e3a5f, #2d5a87);
-            padding: 1rem;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
+        img { max-width: 100%; height: auto; display: block; }
+        a { text-decoration: none; color: inherit; }
+        button { cursor: pointer; border: none; background: none; font-family: inherit; }
 
-        .header-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: space-between;
-            gap: 1rem;
-        }
+        /* ============================================
+           SCROLLBAR
+        ============================================ */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
 
-        .logo {
-            color: #e0f2fe;
-            font-size: 1.5rem;
-            font-weight: bold;
-        }
-
-        .logo span {
-            font-size: 0.9rem;
-            opacity: 0.8;
-        }
-
-        nav {
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-        }
-
-        nav button {
-            background: transparent;
-            border: 2px solid #7dd3fc;
-            color: #e0f2fe;
-            padding: 0.5rem 1.5rem;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            min-width: 120px;
-        }
-
-        nav button:hover {
-            background: #2d5a87;
-        }
-
-        nav button.active {
-            background: #0ea5e9;
-            border-color: #0ea5e9;
-        }
-
-        /* Герой секция */
-        .hero {
-            padding: 4rem 1rem;
-            text-align: center;
-            background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero::before {
+        /* ============================================
+           NOISE TEXTURE OVERLAY
+        ============================================ */
+        body::before {
             content: '';
-            position: absolute;
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 1000;
+            opacity: 0.4;
+        }
+
+        /* ============================================
+           NAVIGATION
+        ============================================ */
+        nav {
+            position: fixed;
             top: 0;
             left: 0;
             right: 0;
-            bottom: 0;
-            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%230ea5e9' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-            opacity: 0.5;
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 1;
-        }
-
-        .hero h2 {
-            font-size: 2.5rem;
-            color: #1e3a5f;
-            margin-bottom: 1rem;
-        }
-
-        .hero p {
-            font-size: 1.2rem;
-            color: #2d5a87;
-            max-width: 700px;
-            margin: 0 auto 2rem;
-        }
-
-        .tags {
+            z-index: 100;
+            padding: 20px 40px;
             display: flex;
-            gap: 1rem;
+            align-items: center;
+            justify-content: space-between;
+            transition: var(--transition);
+        }
+
+        nav.scrolled {
+            background: rgba(10, 10, 10, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 40px;
+        }
+
+        .nav-logo {
+            font-family: var(--font-display);
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-logo span {
+            color: var(--accent);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--secondary);
+            font-size: 14px;
+            font-weight: 500;
+            transition: color var(--transition);
+        }
+
+        .nav-links a:hover { color: var(--primary); }
+
+        .nav-cta {
+            background: var(--primary);
+            color: var(--bg);
+            padding: 10px 22px;
+            border-radius: 100px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+
+        .nav-cta:hover {
+            background: var(--white);
+            transform: translateY(-1px);
+        }
+
+        .nav-hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            padding: 4px;
+        }
+
+        .nav-hamburger span {
+            display: block;
+            width: 24px;
+            height: 2px;
+            background: var(--primary);
+            border-radius: 2px;
+            transition: var(--transition);
+        }
+
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: var(--bg);
+            z-index: 99;
+            flex-direction: column;
+            align-items: center;
             justify-content: center;
-            flex-wrap: wrap;
+            gap: 40px;
         }
 
-        .tag {
-            background: #1e3a5f;
-            color: #e0f2fe;
-            padding: 0.5rem 1rem;
-            border-radius: 25px;
-            font-size: 0.9rem;
+        .mobile-menu.open { display: flex; }
+
+        .mobile-menu a {
+            font-size: 32px;
+            font-family: var(--font-display);
+            color: var(--primary);
+            font-weight: 700;
         }
 
-        .hero-icon {
-            font-size: 4rem;
-            margin-bottom: 1rem;
-        }
-
-        /* Секции */
-        section {
-            padding: 3rem 1rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        section h2 {
-            font-size: 2rem;
-            color: #1e3a5f;
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        /* Карточки биографии */
-        .bio-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .card {
-            background: white;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-        }
-
-        .card-header {
-            background: linear-gradient(to right, #e0f2fe, #bae6fd);
-            padding: 1rem 1.5rem;
-            border-bottom: 3px solid #0ea5e9;
-        }
-
-        .card-header h3 {
-            color: #1e3a5f;
-            font-size: 1.2rem;
-        }
-
-        .card-body {
-            padding: 1.5rem;
-        }
-
-        .card-body p {
-            margin-bottom: 1rem;
-            color: #555;
-            text-align: justify;
-        }
-
-        .card-body p:last-child {
-            margin-bottom: 0;
-        }
-
-        .full-width {
-            grid-column: 1 / -1;
-        }
-
-        .card-body .two-col {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .card-body h4 {
-            color: #2d5a87;
-            margin-bottom: 0.5rem;
-        }
-
-        /* Цитаты */
-        .quotes {
-            margin-top: 2rem;
-        }
-
-        .quotes h3 {
-            font-size: 1.5rem;
-            color: #1e3a5f;
-            text-align: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .quotes-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1rem;
-        }
-
-        .quote {
-            background: linear-gradient(to right, #f0f9ff, #e0f2fe);
-            padding: 1.5rem;
-            border-radius: 10px;
-            border-left: 4px solid #0ea5e9;
-            font-style: italic;
-            color: #1e3a5f;
-            font-size: 1.1rem;
-        }
-
-        /* Хронология */
-        .timeline {
-            margin-top: 3rem;
-        }
-
-        .timeline h3 {
-            font-size: 1.5rem;
-            color: #1e3a5f;
-            text-align: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .timeline-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-        }
-
-        .timeline-item {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 10px;
-            text-align: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-            border-top: 3px solid #0ea5e9;
-        }
-
-        .timeline-year {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #0ea5e9;
-            margin-bottom: 0.5rem;
-        }
-
-        .timeline-event {
-            color: #555;
-            font-size: 0.95rem;
-        }
-
-        /* Видео секция */
-        #video {
-            background: linear-gradient(to bottom, #e0f2fe, #bae6fd);
-        }
-
-        .video-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .video-card {
-            background: white;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-
-        .video-wrapper {
-            position: relative;
-            padding-bottom: 56.25%;
-            height: 0;
-        }
-
-        .video-wrapper {
-            position: relative;
-            padding-bottom: 56.25%;
-            height: 0;
-            cursor: pointer;
-        }
-
-        .video-wrapper iframe {
+        .mobile-menu-close {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 24px;
+            right: 40px;
+            font-size: 32px;
+            color: var(--secondary);
         }
 
-        .video-placeholder {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #1e3a5f 0%, #2d5a87 100%);
+        /* ============================================
+           HERO SECTION
+        ============================================ */
+        .hero {
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            color: white;
-            transition: all 0.3s ease;
+            text-align: center;
+            padding: 120px 24px 80px;
+            position: relative;
+            overflow: hidden;
         }
 
-        .video-placeholder:hover {
-            background: linear-gradient(135deg, #2d5a87 0%, #3d6a97 100%);
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
         }
 
-        .video-placeholder .play-btn {
-            width: 80px;
-            height: 80px;
-            background: rgba(255,255,255,0.2);
+        .hero-glow {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.15;
+            animation: glow-pulse 4s ease-in-out infinite;
+        }
+
+        .hero-glow-1 {
+            background: var(--accent);
+            top: -100px;
+            left: -100px;
+        }
+
+        .hero-glow-2 {
+            background: var(--gold);
+            bottom: -100px;
+            right: -100px;
+            animation-delay: 2s;
+        }
+
+        @keyframes glow-pulse {
+            0%, 100% { opacity: 0.12; transform: scale(1); }
+            50% { opacity: 0.2; transform: scale(1.1); }
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            padding: 8px 16px;
+            font-size: 13px;
+            color: var(--secondary);
+            margin-bottom: 32px;
+            animation: fade-up 0.8s ease both;
+        }
+
+        .hero-badge-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--score-green);
+            border-radius: 50%;
+            animation: dot-pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes dot-pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .hero-title {
+            font-family: var(--font-display);
+            font-size: clamp(48px, 8vw, 96px);
+            font-weight: 900;
+            line-height: 1.05;
+            letter-spacing: -2px;
+            margin-bottom: 24px;
+            animation: fade-up 0.8s ease 0.1s both;
+        }
+
+        .hero-title .accent { color: var(--accent); }
+        .hero-title .gold { color: var(--gold); }
+
+        .hero-subtitle {
+            font-size: clamp(16px, 2.5vw, 22px);
+            color: var(--secondary);
+            max-width: 560px;
+            margin: 0 auto 48px;
+            font-weight: 400;
+            animation: fade-up 0.8s ease 0.2s both;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fade-up 0.8s ease 0.3s both;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--bg);
+            padding: 16px 32px;
+            border-radius: 100px;
+            font-size: 16px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent);
+            opacity: 0;
+            transition: opacity var(--transition);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 60px rgba(232, 213, 183, 0.25);
+        }
+
+        .btn-primary:hover::before { opacity: 1; }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary);
+            padding: 16px 32px;
+            border-radius: 100px;
+            font-size: 16px;
+            font-weight: 600;
+            border: 1px solid var(--border);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--primary);
+            background: rgba(232, 213, 183, 0.05);
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 48px;
+            justify-content: center;
+            margin-top: 80px;
+            padding-top: 48px;
+            border-top: 1px solid var(--border);
+            width: 100%;
+            max-width: 600px;
+            animation: fade-up 0.8s ease 0.4s both;
+            flex-wrap: wrap;
+            gap: 32px;
+        }
+
+        .hero-stat-number {
+            font-family: var(--font-mono);
+            font-size: clamp(28px, 4vw, 40px);
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .hero-stat-label {
+            font-size: 13px;
+            color: var(--secondary);
+            margin-top: 4px;
+        }
+
+        /* ============================================
+           SCROLL INDICATOR
+        ============================================ */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            color: var(--secondary);
+            font-size: 11px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            animation: fade-up 1s ease 1s both;
+        }
+
+        .scroll-mouse {
+            width: 22px;
+            height: 36px;
+            border: 1.5px solid var(--border);
+            border-radius: 11px;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding-top: 6px;
+        }
+
+        .scroll-wheel {
+            width: 3px;
+            height: 8px;
+            background: var(--secondary);
+            border-radius: 2px;
+            animation: scroll-wheel 2s ease-in-out infinite;
+        }
+
+        @keyframes scroll-wheel {
+            0%, 100% { transform: translateY(0); opacity: 1; }
+            80% { transform: translateY(10px); opacity: 0; }
+        }
+
+        /* ============================================
+           DEMO / PHONE MOCKUP
+        ============================================ */
+        .demo-section {
+            padding: 80px 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 60px;
+        }
+
+        .section-label {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-family: var(--font-display);
+            font-size: clamp(32px, 5vw, 56px);
+            font-weight: 700;
+            line-height: 1.15;
+            letter-spacing: -1px;
+        }
+
+        .section-subtitle {
+            font-size: 18px;
+            color: var(--secondary);
+            max-width: 480px;
+            margin: 0 auto;
+        }
+
+        /* ============================================
+           ROAST DEMO CARD
+        ============================================ */
+        .roast-demo {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            max-width: 1100px;
+            width: 100%;
+            padding: 0 24px;
+        }
+
+        .roast-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .roast-card:hover {
+            border-color: rgba(232, 213, 183, 0.2);
+            transform: translateY(-4px);
+        }
+
+        .roast-card-image {
+            width: 100%;
+            height: 240px;
+            background: var(--surface2);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .room-illustration {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Fake room illustration with CSS */
+        .room-mock {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, #1a1a2e 0%, #16213e 40%, #1a1a1a 100%);
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding-bottom: 20px;
+        }
+
+        .room-mock-before {
+            background: linear-gradient(180deg, #2d1b00 0%, #1a1000 40%, #0d0800 100%);
+        }
+
+        .room-mock-after {
+            background: linear-gradient(180deg, #0d1117 0%, #161b22 40%, #1c2128 100%);
+        }
+
+        .score-badge {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: rgba(10, 10, 10, 0.85);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 8px 12px;
+            font-family: var(--font-mono);
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .score-badge.bad { color: var(--score-red); border-color: rgba(255, 59, 48, 0.3); }
+        .score-badge.good { color: var(--score-green); border-color: rgba(48, 209, 88, 0.3); }
+
+        .roast-card-content {
+            padding: 24px;
+        }
+
+        .roast-label {
+            font-size: 11px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--secondary);
+            margin-bottom: 12px;
+        }
+
+        .roast-text {
+            font-size: 15px;
+            line-height: 1.7;
+            color: var(--primary);
+            font-style: italic;
+        }
+
+        .roast-issues {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .issue-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+        }
+
+        .issue-icon { font-size: 14px; flex-shrink: 0; }
+        .issue-text { color: var(--secondary); }
+
+        /* ============================================
+           HOW IT WORKS
+        ============================================ */
+        .how-section {
+            padding: 120px 24px;
+            max-width: 1100px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            margin-top: 64px;
+            position: relative;
+        }
+
+        .steps-connector {
+            position: absolute;
+            top: 32px;
+            left: calc(12.5% + 16px);
+            right: calc(12.5% + 16px);
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border), var(--border), transparent);
+        }
+
+        .step-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 32px 24px;
+            text-align: center;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .step-card:hover {
+            border-color: rgba(232, 213, 183, 0.15);
+            transform: translateY(-4px);
+        }
+
+        .step-number {
+            width: 48px;
+            height: 48px;
+            background: var(--surface2);
+            border: 1px solid var(--border);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2rem;
-            margin-bottom: 1rem;
-            transition: all 0.3s ease;
+            font-family: var(--font-mono);
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--accent);
+            margin: 0 auto 20px;
         }
 
-        .video-placeholder:hover .play-btn {
-            background: rgba(255,255,255,0.3);
-            transform: scale(1.1);
+        .step-icon {
+            font-size: 32px;
+            margin-bottom: 16px;
         }
 
-        .video-placeholder .play-text {
-            font-size: 1.1rem;
-            opacity: 0.9;
+        .step-title {
+            font-family: var(--font-display);
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
         }
 
-        .video-info {
-            padding: 1rem;
+        .step-desc {
+            font-size: 14px;
+            color: var(--secondary);
+            line-height: 1.6;
         }
 
-        .video-info h4 {
-            color: #1e3a5f;
-            margin-bottom: 0.5rem;
+        /* ============================================
+           SCORES SECTION
+        ============================================ */
+        .scores-section {
+            padding: 120px 24px;
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
         }
 
-        .video-info p {
-            color: #666;
-            font-size: 0.9rem;
-        }
-
-        /* Тест */
-        .test-container {
-            max-width: 700px;
+        .scores-inner {
+            max-width: 1100px;
             margin: 0 auto;
-        }
-
-        .test-card {
-            background: white;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-        }
-
-        .test-header {
-            background: linear-gradient(to right, #1e3a5f, #2d5a87);
-            color: #e0f2fe;
-            padding: 1.5rem;
-        }
-
-        .test-header h3 {
-            display: flex;
-            justify-content: space-between;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
             align-items: center;
-            margin-bottom: 1rem;
         }
 
-        .score-badge {
-            background: #0ea5e9;
-            padding: 0.3rem 1rem;
-            border-radius: 20px;
-            font-size: 0.9rem;
-        }
-
-        .progress-bar {
-            height: 8px;
-            background: #0c4a6e;
-            border-radius: 4px;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: #38bdf8;
-            transition: width 0.3s ease;
-        }
-
-        .test-body {
-            padding: 2rem;
-        }
-
-        .question {
-            font-size: 1.2rem;
-            margin-bottom: 1.5rem;
-            color: #333;
-        }
-
-        .options {
+        .scores-list {
             display: flex;
             flex-direction: column;
-            gap: 0.75rem;
+            gap: 16px;
+            margin-top: 48px;
         }
 
-        .option {
-            padding: 1rem 1.5rem;
-            text-align: left;
-            border: 2px solid #bae6fd;
-            border-radius: 10px;
-            background: white;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        .option:hover:not(.disabled) {
-            border-color: #0ea5e9;
-            background: #f0f9ff;
-        }
-
-        .option.correct {
-            border-color: #22c55e;
-            background: #dcfce7;
-            color: #166534;
-        }
-
-        .option.wrong {
-            border-color: #ef4444;
-            background: #fee2e2;
-            color: #991b1b;
-        }
-
-        .option.disabled {
-            opacity: 0.5;
+        .score-row {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 20px 24px;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            transition: var(--transition);
             cursor: default;
         }
 
-        .next-btn {
-            margin-top: 1.5rem;
-            width: 100%;
-            padding: 1rem;
-            background: #0ea5e9;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: background 0.3s ease;
+        .score-row:hover {
+            transform: translateX(8px);
+            border-color: rgba(232, 213, 183, 0.15);
         }
 
-        .next-btn:hover {
-            background: #0284c7;
+        .score-range {
+            font-family: var(--font-mono);
+            font-size: 20px;
+            font-weight: 700;
+            min-width: 60px;
         }
 
-        /* Результат */
-        .result {
+        .score-title-name {
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .score-title-sub {
+            font-size: 13px;
+            color: var(--secondary);
+            margin-top: 2px;
+        }
+
+        .score-emoji {
+            margin-left: auto;
+            font-size: 20px;
+        }
+
+        /* Big score display */
+        .score-display {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .score-ring-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+        }
+
+        .score-ring-svg {
+            width: 200px;
+            height: 200px;
+            transform: rotate(-90deg);
+        }
+
+        .score-ring-bg {
+            fill: none;
+            stroke: var(--surface2);
+            stroke-width: 8;
+        }
+
+        .score-ring-fill {
+            fill: none;
+            stroke-width: 8;
+            stroke-linecap: round;
+            stroke-dasharray: 502;
+            stroke-dashoffset: 502;
+            transition: stroke-dashoffset 2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .score-number-display {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .score-big-num {
+            font-family: var(--font-mono);
+            font-size: 52px;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .score-big-den {
+            font-size: 16px;
+            color: var(--secondary);
+        }
+
+        /* ============================================
+           STYLES SECTION
+        ============================================ */
+        .styles-section {
+            padding: 120px 24px;
+            max-width: 1200px;
+            margin: 0 auto;
             text-align: center;
-            padding: 2rem;
         }
 
-        .result-score {
-            font-size: 4rem;
-            font-weight: bold;
-            color: #0ea5e9;
-            margin-bottom: 1rem;
-        }
-
-        .result-text {
-            font-size: 1.3rem;
-            color: #555;
-            margin-bottom: 0.5rem;
-        }
-
-        .result-percent {
-            color: #888;
-            margin-bottom: 1.5rem;
-        }
-
-        .restart-btn {
-            padding: 1rem 2rem;
-            background: #0ea5e9;
-            color: white;
-            border: none;
-            border-radius: 25px;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }
-
-        .restart-btn:hover {
-            background: #0284c7;
-        }
-
-        /* Семья */
-        .family-section {
-            margin-top: 2rem;
-        }
-
-        .family-section h3 {
-            font-size: 1.5rem;
-            color: #1e3a5f;
-            text-align: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .family-grid {
+        .styles-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1rem;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 16px;
+            margin-top: 64px;
         }
 
-        .family-member {
-            background: white;
-            padding: 1rem;
-            border-radius: 10px;
-            text-align: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        .style-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            transition: var(--transition);
+            cursor: pointer;
         }
 
-        .family-member .role {
-            font-size: 0.8rem;
-            color: #0ea5e9;
-            text-transform: uppercase;
+        .style-card:hover {
+            border-color: rgba(232, 213, 183, 0.3);
+            transform: translateY(-8px);
+        }
+
+        .style-card-image {
+            height: 160px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .style-visual {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Style visual CSS backgrounds */
+        .style-cozy .style-card-image {
+            background: linear-gradient(135deg, #2C1810 0%, #4A2C17 50%, #6B3A20 100%);
+        }
+
+        .style-luxury .style-card-image {
+            background: linear-gradient(135deg, #0A0A0A 0%, #1A1A00 50%, #2A2800 100%);
+        }
+
+        .style-scandi .style-card-image {
+            background: linear-gradient(135deg, #E8E4DC 0%, #D4CEBF 50%, #C5BFAF 100%);
+        }
+
+        .style-minimal .style-card-image {
+            background: linear-gradient(135deg, #F5F5F5 0%, #EBEBEB 50%, #E0E0E0 100%);
+        }
+
+        .style-rich .style-card-image {
+            background: linear-gradient(135deg, #2C2414 0%, #3D3020 50%, #524228 100%);
+        }
+
+        .style-card-content {
+            padding: 16px;
+            text-align: left;
+        }
+
+        .style-card-name {
+            font-weight: 700;
+            font-size: 15px;
+            margin-bottom: 4px;
+        }
+
+        .style-card-desc {
+            font-size: 12px;
+            color: var(--secondary);
+        }
+
+        .style-card-tag {
+            display: inline-block;
+            font-size: 10px;
             letter-spacing: 1px;
-            margin-bottom: 0.25rem;
+            text-transform: uppercase;
+            color: var(--accent);
+            font-family: var(--font-mono);
+            margin-top: 8px;
         }
 
-        .family-member .name {
-            font-weight: bold;
-            color: #1e3a5f;
+        /* ============================================
+           FIXES PREVIEW
+        ============================================ */
+        .fixes-section {
+            padding: 120px 24px;
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
         }
 
-        /* Футер */
-        footer {
-            background: #1e3a5f;
-            color: #e0f2fe;
+        .fixes-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: start;
+        }
+
+        .fixes-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .fix-card {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+            transition: var(--transition);
+        }
+
+        .fix-card:hover {
+            border-color: rgba(232, 213, 183, 0.15);
+            transform: translateX(4px);
+        }
+
+        .fix-card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .fix-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--bg);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .fix-card-title {
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .fix-card-budget {
+            margin-left: auto;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            color: var(--score-green);
+            background: rgba(48, 209, 88, 0.1);
+            padding: 4px 10px;
+            border-radius: 100px;
+        }
+
+        .fix-card-desc {
+            font-size: 14px;
+            color: var(--secondary);
+            margin-left: 48px;
+        }
+
+        .fix-indicators {
+            display: flex;
+            gap: 16px;
+            margin-top: 12px;
+            margin-left: 48px;
+        }
+
+        .fix-indicator {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            color: var(--secondary);
+        }
+
+        .fix-dots {
+            display: flex;
+            gap: 3px;
+        }
+
+        .fix-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--border);
+        }
+
+        .fix-dot.active { background: var(--accent); }
+
+        .budget-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+
+        .budget-tab {
+            padding: 8px 20px;
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 600;
+            border: 1px solid var(--border);
+            color: var(--secondary);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .budget-tab.active {
+            background: var(--primary);
+            color: var(--bg);
+            border-color: var(--primary);
+        }
+
+        .budget-tab:hover:not(.active) {
+            border-color: rgba(232, 213, 183, 0.3);
+            color: var(--primary);
+        }
+
+        /* ============================================
+           BEFORE/AFTER SECTION
+        ============================================ */
+        .before-after-section {
+            padding: 120px 24px;
             text-align: center;
-            padding: 2rem 1rem;
+            max-width: 900px;
+            margin: 0 auto;
         }
 
-        footer p {
-            margin-bottom: 0.5rem;
+        .before-after-container {
+            margin-top: 64px;
+            position: relative;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            border: 1px solid var(--border);
+            cursor: ew-resize;
+            user-select: none;
         }
 
-        footer .copyright {
-            color: #7dd3fc;
-            font-size: 0.9rem;
+        .before-after-images {
+            position: relative;
+            height: 400px;
         }
 
-        /* Адаптивность */
+        .ba-image {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ba-before {
+            background: linear-gradient(135deg, #1a0800 0%, #2d1b00 40%, #1a1000 100%);
+            z-index: 1;
+        }
+
+        .ba-after {
+            background: linear-gradient(135deg, #0d1117 0%, #161b22 40%, #1c2128 100%);
+            z-index: 2;
+            clip-path: inset(0 50% 0 0);
+            transition: clip-path 0s;
+        }
+
+        .ba-label {
+            position: absolute;
+            bottom: 20px;
+            font-size: 12px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-family: var(--font-mono);
+            padding: 6px 14px;
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            z-index: 5;
+        }
+
+        .ba-label-before { left: 20px; }
+        .ba-label-after { right: 20px; }
+
+        .ba-divider {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--primary);
+            left: 50%;
+            z-index: 10;
+            transform: translateX(-50%);
+            cursor: ew-resize;
+        }
+
+        .ba-handle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--bg);
+            font-size: 14px;
+            box-shadow: 0 0 0 4px rgba(232, 213, 183, 0.2);
+        }
+
+        /* Room elements for mockup */
+        .room-elements {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding: 20px;
+            gap: 12px;
+        }
+
+        .room-sofa-before {
+            width: 120px;
+            height: 50px;
+            background: #3d2b1a;
+            border-radius: 8px 8px 0 0;
+            border: 1px solid #4a3422;
+        }
+
+        .room-sofa-after {
+            width: 120px;
+            height: 50px;
+            background: #1e2832;
+            border-radius: 8px 8px 0 0;
+            border: 1px solid #2a3a4a;
+        }
+
+        .room-lamp-before {
+            width: 20px;
+            height: 80px;
+            background: #4a2a00;
+            border-radius: 2px;
+        }
+
+        .room-lamp-after {
+            width: 20px;
+            height: 80px;
+            background: #1a2a3a;
+            border-radius: 2px;
+        }
+
+        .room-plant {
+            font-size: 32px;
+            margin-bottom: 0px;
+        }
+
+        /* ============================================
+           PRICING
+        ============================================ */
+        .pricing-section {
+            padding: 120px 24px;
+            text-align: center;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 24px;
+            max-width: 960px;
+            margin: 64px auto 0;
+        }
+
+        .pricing-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 40px 32px;
+            text-align: left;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .pricing-card.featured {
+            border-color: var(--gold);
+            background: linear-gradient(135deg, var(--surface) 0%, rgba(212, 175, 55, 0.05) 100%);
+        }
+
+        .pricing-featured-badge {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--gold);
+            color: var(--bg);
+            padding: 4px 16px;
+            border-radius: 100px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .pricing-plan {
+            font-size: 12px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--secondary);
+            font-family: var(--font-mono);
+            margin-bottom: 16px;
+        }
+
+        .pricing-price {
+            font-family: var(--font-mono);
+            font-size: 48px;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .pricing-period {
+            font-size: 14px;
+            color: var(--secondary);
+            margin-bottom: 32px;
+        }
+
+        .pricing-features {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+
+        .pricing-feature {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+
+        .pricing-check {
+            color: var(--score-green);
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .pricing-x {
+            color: var(--border);
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .pricing-feature-text {
+            color: var(--secondary);
+        }
+
+        .pricing-feature-text.available {
+            color: var(--primary);
+        }
+
+        .btn-pricing-free {
+            width: 100%;
+            padding: 14px;
+            border-radius: var(--radius);
+            font-size: 15px;
+            font-weight: 600;
+            border: 1px solid var(--border);
+            color: var(--primary);
+            transition: var(--transition);
+        }
+
+        .btn-pricing-free:hover {
+            border-color: rgba(232, 213, 183, 0.3);
+            background: rgba(232, 213, 183, 0.05);
+        }
+
+        .btn-pricing-premium {
+            width: 100%;
+            padding: 14px;
+            border-radius: var(--radius);
+            font-size: 15px;
+            font-weight: 700;
+            background: var(--gold);
+            color: var(--bg);
+            transition: var(--transition);
+        }
+
+        .btn-pricing-premium:hover {
+            background: #c4a030;
+            transform: translateY(-2px);
+            box-shadow: 0 16px 48px rgba(212, 175, 55, 0.3);
+        }
+
+        /* ============================================
+           VIRAL / SOCIAL PROOF
+        ============================================ */
+        .social-section {
+            padding: 120px 24px;
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        .social-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .tweets-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-top: 64px;
+        }
+
+        .tweet-card {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            text-align: left;
+            transition: var(--transition);
+        }
+
+        .tweet-card:hover {
+            border-color: rgba(232, 213, 183, 0.15);
+            transform: translateY(-4px);
+        }
+
+        .tweet-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .tweet-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--surface);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            border: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        .tweet-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .tweet-handle {
+            font-size: 12px;
+            color: var(--secondary);
+        }
+
+        .tweet-x {
+            margin-left: auto;
+            color: var(--secondary);
+            font-size: 16px;
+        }
+
+        .tweet-text {
+            font-size: 15px;
+            line-height: 1.6;
+            color: var(--primary);
+        }
+
+        .tweet-highlight {
+            color: var(--accent);
+        }
+
+        .tweet-meta {
+            margin-top: 16px;
+            display: flex;
+            gap: 16px;
+            font-size: 13px;
+            color: var(--secondary);
+        }
+
+        /* ============================================
+           MARQUEE / TICKER
+        ============================================ */
+        .ticker-section {
+            padding: 40px 0;
+            overflow: hidden;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .ticker-track {
+            display: flex;
+            gap: 48px;
+            animation: ticker 20s linear infinite;
+            width: max-content;
+        }
+
+        .ticker-track:hover { animation-play-state: paused; }
+
+        @keyframes ticker {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .ticker-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            white-space: nowrap;
+            color: var(--secondary);
+            font-size: 15px;
+            font-family: var(--font-mono);
+        }
+
+        .ticker-item span { color: var(--accent); }
+        .ticker-dot { color: var(--border); font-size: 8px; }
+
+        /* ============================================
+           FAQ
+        ============================================ */
+        .faq-section {
+            padding: 120px 24px;
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        .faq-list {
+            margin-top: 64px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .faq-item {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .faq-question {
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 16px;
+            gap: 16px;
+        }
+
+        .faq-icon {
+            width: 24px;
+            height: 24px;
+            border: 1px solid var(--border);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+            transition: var(--transition);
+            color: var(--secondary);
+        }
+
+        .faq-item.open .faq-icon {
+            transform: rotate(45deg);
+            color: var(--primary);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+        }
+
+        .faq-item.open .faq-answer {
+            max-height: 200px;
+        }
+
+        .faq-answer-inner {
+            padding: 0 24px 24px;
+            font-size: 15px;
+            color: var(--secondary);
+            line-height: 1.7;
+        }
+
+        /* ============================================
+           CTA SECTION
+        ============================================ */
+        .cta-section {
+            padding: 120px 24px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-bg-glow {
+            position: absolute;
+            width: 800px;
+            height: 400px;
+            background: var(--accent);
+            filter: blur(160px);
+            opacity: 0.06;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+        }
+
+        .cta-inner {
+            position: relative;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .cta-title {
+            font-family: var(--font-display);
+            font-size: clamp(36px, 6vw, 64px);
+            font-weight: 900;
+            line-height: 1.1;
+            letter-spacing: -1px;
+            margin-bottom: 24px;
+        }
+
+        .cta-subtitle {
+            font-size: 18px;
+            color: var(--secondary);
+            margin-bottom: 48px;
+        }
+
+        /* ============================================
+           FOOTER
+        ============================================ */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 48px 40px;
+        }
+
+        .footer-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 24px;
+        }
+
+        .footer-logo {
+            font-family: var(--font-display);
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .footer-logo span { color: var(--accent); }
+
+        .footer-links {
+            display: flex;
+            gap: 32px;
+            flex-wrap: wrap;
+        }
+
+        .footer-link {
+            font-size: 14px;
+            color: var(--secondary);
+            transition: color var(--transition);
+        }
+
+        .footer-link:hover { color: var(--primary); }
+
+        .footer-copy {
+            font-size: 13px;
+            color: var(--secondary);
+            width: 100%;
+            text-align: center;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+            margin-top: 24px;
+        }
+
+        /* ============================================
+           ANIMATIONS
+        ============================================ */
+        @keyframes fade-up {
+            from {
+                opacity: 0;
+                transform: translateY(24px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(32px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+        .reveal-delay-3 { transition-delay: 0.3s; }
+        .reveal-delay-4 { transition-delay: 0.4s; }
+
+        /* ============================================
+           UPLOAD DEMO AREA
+        ============================================ */
+        .upload-demo {
+            max-width: 600px;
+            margin: 64px auto 0;
+            background: var(--surface);
+            border: 2px dashed var(--border);
+            border-radius: var(--radius-lg);
+            padding: 60px 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .upload-demo:hover {
+            border-color: rgba(232, 213, 183, 0.3);
+            background: rgba(232, 213, 183, 0.02);
+        }
+
+        .upload-demo::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 50% 0%, rgba(255, 107, 53, 0.05), transparent 70%);
+            opacity: 0;
+            transition: opacity var(--transition);
+        }
+
+        .upload-demo:hover::before { opacity: 1; }
+
+        .upload-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .upload-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .upload-subtitle {
+            font-size: 14px;
+            color: var(--secondary);
+        }
+
+        .upload-formats {
+            margin-top: 24px;
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .upload-format {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            padding: 4px 10px;
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            color: var(--secondary);
+        }
+
+        /* ============================================
+           MOBILE RESPONSIVE
+        ============================================ */
+        @media (max-width: 1024px) {
+            .styles-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .pricing-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .tweets-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .steps-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .steps-connector { display: none; }
+
+            .scores-inner {
+                grid-template-columns: 1fr;
+                gap: 48px;
+            }
+
+            .fixes-inner {
+                grid-template-columns: 1fr;
+                gap: 48px;
+            }
+        }
+
         @media (max-width: 768px) {
-            .header-container {
+            nav {
+                padding: 16px 24px;
+            }
+
+            nav.scrolled {
+                padding: 14px 24px;
+            }
+
+            .nav-links { display: none; }
+            .nav-cta { display: none; }
+            .nav-hamburger { display: flex; }
+
+            .hero {
+                padding: 100px 20px 60px;
+            }
+
+            .hero-stats {
+                gap: 24px;
+            }
+
+            .roast-demo {
+                grid-template-columns: 1fr;
+                padding: 0;
+            }
+
+            .steps-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .styles-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .pricing-grid {
+                grid-template-columns: 1fr;
+                max-width: 400px;
+            }
+
+            .tweets-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .before-after-images {
+                height: 280px;
+            }
+
+            .upload-demo {
+                padding: 40px 24px;
+            }
+
+            footer {
+                padding: 40px 24px;
+            }
+
+            .footer-inner {
                 flex-direction: column;
-                text-align: center;
+                align-items: flex-start;
             }
 
-            .hero h2 {
-                font-size: 1.8rem;
+            .scores-inner {
+                gap: 48px;
             }
 
-            .hero p {
-                font-size: 1rem;
+            .score-ring-container {
+                align-self: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                letter-spacing: -1px;
             }
 
-            nav button {
-                min-width: 100px;
-                font-size: 0.9rem;
+            .hero-buttons {
+                flex-direction: column;
+                align-items: stretch;
             }
 
-            section {
-                padding: 2rem 1rem;
+            .btn-primary, .btn-secondary {
+                justify-content: center;
             }
 
-            section h2 {
-                font-size: 1.5rem;
+            .styles-grid {
+                grid-template-columns: 1fr 1fr;
             }
+
+            .hero-stats {
+                gap: 20px;
+            }
+
+            .hero-stat-number {
+                font-size: 28px;
+            }
+
+            .section-title {
+                letter-spacing: -0.5px;
+            }
+        }
+
+        /* ============================================
+           UTILITY
+        ============================================ */
+        .text-center { text-align: center; }
+        .text-accent { color: var(--accent); }
+        .text-gold { color: var(--gold); }
+        .text-secondary { color: var(--secondary); }
+        .mt-4 { margin-top: 16px; }
+        .mt-8 { margin-top: 32px; }
+
+        /* App store badges */
+        .store-badges {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-top: 32px;
+            flex-wrap: wrap;
+        }
+
+        .store-badge {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 12px 20px;
+            transition: var(--transition);
+        }
+
+        .store-badge:hover {
+            border-color: rgba(232, 213, 183, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .store-badge-icon { font-size: 24px; }
+
+        .store-badge-text-top {
+            font-size: 10px;
+            color: var(--secondary);
+            letter-spacing: 0.5px;
+        }
+
+        .store-badge-text-bottom {
+            font-size: 16px;
+            font-weight: 700;
         }
     </style>
 </head>
 <body>
-    <!-- Шапка -->
-    <header>
-        <div class="header-container">
-            <div class="logo">
-                Николай Ростов
-                <span>Персонаж романа «Война и мир»</span>
-            </div>
-            <nav>
-                <button onclick="scrollToSection('bio')" id="btn-bio">Биография</button>
-                <button onclick="scrollToSection('video')" id="btn-video">Видео</button>
-                <button onclick="scrollToSection('test')" id="btn-test">Тест</button>
-            </nav>
-        </div>
-    </header>
 
-    <!-- Герой секция -->
-    <div class="hero">
-        <div class="hero-content">
-            <div class="hero-icon">⚔️</div>
-            <h2>Гусар, помещик, семьянин</h2>
-            <p>
-                Николай Ростов — один из центральных персонажей романа-эпопеи 
-                Льва Николаевича Толстого «Война и мир». Гусар, участник Отечественной войны 1812 года, 
-                брат Наташи Ростовой, воплощение традиционных русских дворянских ценностей и патриотизма.
-            </p>
-            <div class="tags">
-                <span class="tag">⚔️ Гусар</span>
-                <span class="tag">👨‍👩‍👧 Семья Ростовых</span>
-                <span class="tag">🏰 Помещик</span>
-                <span class="tag">❤️ Муж Марьи</span>
+    <!-- ============================================
+         NAVIGATION
+    ============================================ -->
+    <nav id="navbar">
+        <div class="nav-logo">
+            🏠 Room<span>Roast</span>
+        </div>
+
+        <ul class="nav-links">
+            <li><a href="#how">How it works</a></li>
+            <li><a href="#styles">Styles</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+            <li><a href="#faq">FAQ</a></li>
+        </ul>
+
+        <a href="#upload" class="nav-cta">Roast My Room →</a>
+
+        <button class="nav-hamburger" id="hamburger" aria-label="Menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <button class="mobile-menu-close" id="mobileClose">✕</button>
+        <a href="#how" onclick="closeMobileMenu()">How it works</a>
+        <a href="#styles" onclick="closeMobileMenu()">Styles</a>
+        <a href="#pricing" onclick="closeMobileMenu()">Pricing</a>
+        <a href="#faq" onclick="closeMobileMenu()">FAQ</a>
+        <a href="#upload" onclick="closeMobileMenu()" style="color: var(--accent);">Roast My Room 🔥</a>
+    </div>
+
+    <!-- ============================================
+         HERO
+    ============================================ -->
+    <section class="hero">
+        <div class="hero-bg">
+            <div class="hero-glow hero-glow-1"></div>
+            <div class="hero-glow hero-glow-2"></div>
+        </div>
+
+        <div class="hero-badge">
+            <div class="hero-badge-dot"></div>
+            47,293 rooms roasted today
+        </div>
+
+        <h1 class="hero-title">
+            AI judges<br>
+            your room.<br>
+            <span class="accent">Brutally.</span>
+        </h1>
+
+        <p class="hero-subtitle">
+            Upload your room photo. Get a savage roast, an aesthetic score, and an AI-generated glow-up. For free.
+        </p>
+
+        <div class="hero-buttons">
+            <a href="#upload" class="btn-primary">
+                🔥 Roast My Room
+            </a>
+            <a href="#how" class="btn-secondary">
+                See How It Works
+            </a>
+        </div>
+
+        <div class="hero-stats">
+            <div>
+                <div class="hero-stat-number" data-count="47293">0</div>
+                <div class="hero-stat-label">Rooms roasted</div>
             </div>
+            <div>
+                <div class="hero-stat-number" style="color: var(--score-yellow);">5.1</div>
+                <div class="hero-stat-label">Average score</div>
+            </div>
+            <div>
+                <div class="hero-stat-number" data-count="12847">0</div>
+                <div class="hero-stat-label">Glow-ups achieved</div>
+            </div>
+        </div>
+
+        <div class="scroll-indicator">
+            <div class="scroll-mouse">
+                <div class="scroll-wheel"></div>
+            </div>
+            <span>Scroll</span>
+        </div>
+    </section>
+
+    <!-- ============================================
+         TICKER
+    ============================================ -->
+    <div class="ticker-section">
+        <div class="ticker-track" id="ticker">
+            <div class="ticker-item"><span>4.2/10</span> "Looks like a college dorm having an existential crisis" <span class="ticker-dot">●</span></div>
+            <div class="ticker-item"><span>2.1/10</span> "The cables are a war crime against design" <span class="ticker-dot">●</span></div>
+            <div class="ticker-item"><span>8.7/10</span> "Architectural Digest would call. Answer it." <span class="ticker-dot">●</span></div>
+            <div class="ticker-item"><span>3.5/10</span> "IKEA called, they want their default setup back" <span class="ticker-dot">●</span></div>
+            <div class="ticker-item"><span>6.2/10</span> "Has potential. Has NOT reached it." <span class="ticker-dot">●</span></div>
+            <div class="ticker-item"><span>1.3/10</span> "The overhead light is doing you dirty bestie" <span class="ticker-dot">●</span></div>
+            <div class="ticker-item"><span>9.1/10</span> "This room has aura. Protect it." <span class="ticker-dot">●</span></div>
+            <div class="ticker-item"><span>4.2/10</span> "Looks like a college dorm having an existential crisis" <span class="ticker-dot">●</span></div>
+            <div class="ticker-item"><span>2.1/10</span> "The cables are a war crime against design" <span class="ticker-dot">●</span></div>
+            <div class="ticker-item"><span>8.7/10</span> "Architectural Digest would call. Answer it." <span class="ticker-dot">●</span></div>
+            <div class="ticker-item"><span>3.5/10</span> "IKEA called, they want their default setup back" <span class="ticker-dot">●</span></div>
+            <div class="ticker-item"><span>6.2/10</span> "Has potential. Has NOT reached it." <span class="ticker-dot">●</span></div>
+            <div class="ticker-item"><span>1.3/10</span> "The overhead light is doing you dirty bestie" <span class="ticker-dot">●</span></div>
+            <div class="ticker-item"><span>9.1/10</span> "This room has aura. Protect it." <span class="ticker-dot">●</span></div>
         </div>
     </div>
 
-    <!-- Биография -->
-    <section id="bio">
-        <h2>Биография персонажа</h2>
-        
-        <div class="bio-grid">
-            <!-- Карточка 1: Происхождение -->
-            <div class="card">
-                <div class="card-header">
-                    <h3>Происхождение и семья</h3>
-                </div>
-                <div class="card-body">
-                    <p>
-                        Николай Ростов — сын графа Ильи Николаевича Ростова и графини Натальи, 
-                        старший брат Наташи Ростовой и Веры, младший брат Пети. Ростовы — старинный 
-                        дворянский род, известный своей добротой и гостеприимством, но к началу романа 
-                        их финансовое положение значительно ухудшилось. Граф Илья Ростов — добрый, 
-                        щедрый, но неумелый хозяин, который бездумно тратит деньги на развлечения, 
-                        приёмы и подарки, не думая о будущем.
-                    </p>
-                    <p>
-                        Николай с детства впитал семейные ценности: честность, искренность, преданность 
-                        семье и долгу. Атмосфера в доме Ростовых — тёплая, искренняя, полная любви и 
-                        радости — сформировала характер Николая как человека прямого, доброго и принципиального. 
-                        В отличие от семьи Курагиных, где царят холодный расчёт и лицемерие, Ростовы живут 
-                        сердцем, эмоциями, искренними чувствами. Эта открытость и эмоциональность становятся 
-                        определяющими чертами характера Николая.
-                    </p>
-                    <p>
-                        Особенно близкие отношения у Николая с младшей сестрой Наташей — они понимают друг 
-                        друга без слов, делятся сокровенными мыслями. Когда Николай проигрывает большие 
-                        деньги в карты, именно Наташа первой замечает его тяжёлое состояние и пытается 
-                        утешить. Семейные сцены Ростовых — именины, охота, новогодний бал — одни из самых 
-                        светлых и радостных эпизодов романа, показывающие, что настоящее счастье не в 
-                        богатстве, а в любви и единстве семьи.
-                    </p>
+    <!-- ============================================
+         UPLOAD DEMO
+    ============================================ -->
+    <section style="padding: 120px 24px; text-align: center;" id="upload">
+        <div style="max-width: 700px; margin: 0 auto;">
+            <div class="section-label reveal">Try It Now</div>
+            <h2 class="section-title reveal reveal-delay-1">
+                How expensive does<br>your room look?
+            </h2>
+            <p class="section-subtitle mt-4 reveal reveal-delay-2">
+                Drop a photo and find out in 10 seconds.
+            </p>
+
+            <div class="upload-demo reveal reveal-delay-3" id="uploadDemo">
+                <div class="upload-icon">📸</div>
+                <div class="upload-title">Drop your room here</div>
+                <div class="upload-subtitle">or tap to upload from your phone</div>
+                <div class="upload-formats">
+                    <span class="upload-format">JPG</span>
+                    <span class="upload-format">PNG</span>
+                    <span class="upload-format">HEIC</span>
+                    <span class="upload-format">WEBP</span>
                 </div>
             </div>
 
-            <!-- Карточка 2: Военная служба -->
-            <div class="card">
-                <div class="card-header">
-                    <h3>Военная служба</h3>
-                </div>
-                <div class="card-body">
-                    <p>
-                        Николай поступает на военную службу в гусарский полк в 1805 году. Военная карьера 
-                        для молодого дворянина того времени была естественным и почётным выбором. Юный 
-                        Николай мечтает о подвигах, славе, о том, как будет сражаться за царя и отечество. 
-                        Он полон романтических представлений о войне, которые вскоре столкнутся с суровой 
-                        реальностью. В армии Ростов проявляет себя как храбрый, хотя и порывистый офицер.
-                    </p>
-                    <p>
-                        Первое боевое крещение Николай получает в Шенграбенском сражении, где он совершает 
-                        свой первый «подвиг» — атакует французских кавалеристов, но получает ранение и падает 
-                        с лошади. В этот момент он думает, что погибает, и испытывает смесь ужаса и восторга. 
-                        Однако вскоре он понимает, что война — это не романтическое приключение, а тяжёлое 
-                        испытание. Аустерлицкое сражение, закончившееся поражением русской армии, становится 
-                        для Николая важным уроком: он видит хаос и неразбериху войны, понимает, что даже 
-                        личная храбрость не может изменить исход битвы.
-                    </p>
-                    <p>
-                        Отечественная война 1812 года становится для Николая временем взросления и 
-                        осознания истинного патриотизма. Он участвует в Бородинском сражении — одном из 
-                        самых кровопролитных в истории, видит тысячи убитых и раненых, осознаёт масштаб 
-                        народной трагедии. Он становится свидетелем пожара Москвы, преследует отступающих 
-                        французов. Война превращается для него из романтической мечты в суровую реальность, 
-                        где нужно просто выполнять свой долг, не думая о славе. Николай становится 
-                        настоящим офицером, надёжным и ответственным.
-                    </p>
-                </div>
+            <div class="store-badges reveal reveal-delay-4">
+                <a href="#" class="store-badge">
+                    <div class="store-badge-icon">🍎</div>
+                    <div>
+                        <div class="store-badge-text-top">Download on the</div>
+                        <div class="store-badge-text-bottom">App Store</div>
+                    </div>
+                </a>
+                <a href="#" class="store-badge">
+                    <div class="store-badge-icon">▶</div>
+                    <div>
+                        <div class="store-badge-text-top">Get it on</div>
+                        <div class="store-badge-text-bottom">Google Play</div>
+                    </div>
+                </a>
             </div>
+        </div>
+    </section>
 
-            <!-- Карточка 3: Характер и взгляды -->
-            <div class="card">
-                <div class="card-header">
-                    <h3>Характер и взгляды</h3>
-                </div>
-                <div class="card-body">
-                    <p>
-                        Николай Ростов — человек прямых, честных убеждений, которые он готов отстаивать. 
-                        Он не склонен к рефлексии и философствованию, в отличие от своего друга Пьера 
-                        Безухова, который постоянно ищет смысл жизни. Николай — человек действия, долга, 
-                        традиционных ценностей. Он искренне любит царя и отечество, готов умереть за них 
-                        без лишних размышлений. Для него не существует сложных моральных дилемм — он 
-                        просто знает, что правильно, а что нет.
-                    </p>
-                    <p>
-                        Эта прямолинейность имеет свои плюсы и минусы. С одной стороны, Николай — честный, 
-                        надёжный человек, на которого можно положиться. Он не лицемерит, не притворяется, 
-                        говорит то, что думает. С другой стороны, он бывает резок и категоричен в суждениях, 
-                        не терпит инакомыслия. Например, он резко выступает против либеральных идей своего 
-                        друга Пьера, считая их вредными и опасными. Николай — консерватор, сторонник 
-                        традиционного уклада жизни.
-                    </p>
-                    <p>
-                        При этом Николай не лишён слабостей, которые Толстой показывает с психологической 
-                        глубиной. Он азартен, проигрывает огромные суммы в карты (43000 рублей Долохову), 
-                        что создаёт тяжёлые проблемы для семьи. Он горяч, совершает импульсивные поступки, 
-                        о которых потом жалеет. Однако его честность и готовность исправлять ошибки, 
-                        принимать ответственность за свои действия вызывают уважение. В этом Николай 
-                        отличается от таких персонажей, как Анатоль Курагин или Долохов, которые не 
-                        признают своих ошибок.
-                    </p>
-                </div>
-            </div>
+    <!-- ============================================
+         EXAMPLE ROASTS
+    ============================================ -->
+    <section style="padding: 0 24px 120px; text-align: center;">
+        <div style="max-width: 1100px; margin: 0 auto;">
+            <div class="section-label reveal">Real Roasts</div>
+            <h2 class="section-title reveal reveal-delay-1">
+                The AI doesn't hold back.
+            </h2>
+            <p class="section-subtitle mt-4 reveal reveal-delay-2">
+                Real results from real rooms. Results may sting.
+            </p>
 
-            <!-- Карточка 4: Любовь -->
-            <div class="card">
-                <div class="card-header">
-                    <h3>Любовь и семейная жизнь</h3>
-                </div>
-                <div class="card-body">
-                    <p>
-                        В начале романа Николай влюблён в кузину Соню, бедную родственницу, живущую в доме 
-                        Ростовых. Их любовь — искренняя, юношеская, полная надежд. Соня — тихая, нежная 
-                        девушка, которая преданно любит Николая и ждёт его из армии. Они дают друг другу 
-                        клятвы верности, мечтают о будущем. Однако графиня Наталья Ростова настаивает, 
-                        чтобы сын женился на богатой невесте ради спасения семейного состояния, которое 
-                        подорвано долгами и расточительностью отца.
-                    </p>
-                    <p>
-                        Это создаёт глубокий внутренний конфликт для Николая. С одной стороны — его любовь 
-                        к Соне, данное ей слово, чувство долга и чести. С другой — долг перед семьёй, 
-                        необходимость спасать родовое имение, просьбы матери. Николай переживает тяжёлую 
-                        душевную драму. После разговора с матерью он пишет Соне письмо с отказом, хотя 
-                        это причиняет ему боль. Этот эпизод показывает сложность жизненных выборов, 
-                        столкновение личного счастья и семейного долга.
-                    </p>
-                    <p>
-                        После разрыва с Соней Николай женится на княжне Марье Болконской — дочери старого 
-                        князя Николая Болконского и сестре Андрея. Этот брак, сначала основанный частично 
-                        на расчёте (Марья приносит богатое приданое), перерастает в глубокое, искреннее 
-                        чувство. Марья — умная, духовно глубокая женщина, которая привносит в жизнь Николая 
-                        новое измерение. Её религиозность, склонность к рефлексии уравновешивают его 
-                        прямолинейность. Они становятся дополнением друг друга: Николай — практическая, 
-                        деятельная натура, Марья — духовная, созерцательная.
-                    </p>
-                </div>
-            </div>
-
-            <!-- Карточка 5: Хозяйство (полная ширина) -->
-            <div class="card full-width">
-                <div class="card-header">
-                    <h3>Хозяйственная деятельность и дальнейшая судьба</h3>
-                </div>
-                <div class="card-body">
-                    <div class="two-col">
-                        <div>
-                            <h4>Жизнь в деревне</h4>
-                            <p>
-                                После войны Николай выходит в отставку и вместе с женой и матерью 
-                                поселяется в деревне — в имении жены Лысых Горах. В отличие от своего отца, 
-                                который был неумелым и расточительным хозяином, Николай оказывается способным 
-                                и энергичным помещиком. Он разумно управляет имением, постепенно расплачивается 
-                                с огромными долгами семьи (более 100 000 рублей), создаёт крепкое, прибыльное 
-                                хозяйство. Этот переход от «барина» к рачительному хозяину показывает 
-                                способность Николая учиться и меняться.
-                            </p>
-                            <p>
-                                Толстой показывает Николая как образец «доброго барина», который заботится 
-                                о крестьянах, справедливо управляет имением. Он посещает поля, беседует 
-                                с мужиками, понимает их нужды. Однако при этом он твёрдо стоит за сохранение 
-                                существующего общественного порядка. Николай не принимает новых либеральных 
-                                идей о необходимости перемен в крестьянском вопросе, считая их вредными 
-                                мечтаниями интеллигенции. Здесь проявляется его консерватизм — он верит, 
-                                что существующий уклад проверен временем и не нуждается в изменениях.
-                            </p>
-                            <p>
-                                Отношения Николая с крестьянами строятся на традиционном патриархальном 
-                                укладе: барин заботится о мужиках, мужики благодарны барину. Толстой, сам 
-                                увлекавшийся идеями опрощения и сближения с народом, показывает эту модель 
-                                как идеальную для России того времени. Николай не пытается «просвещать» 
-                                крестьян или навязывать им чуждые идеи — он просто живёт с ними в гармонии, 
-                                уважая их традиции и образ жизни.
-                            </p>
+            <div class="roast-demo reveal reveal-delay-3">
+                <!-- Card 1 -->
+                <div class="roast-card">
+                    <div class="roast-card-image">
+                        <div class="room-mock room-mock-before" style="width:100%;">
+                            <div class="room-elements">
+                                <div class="room-sofa-before"></div>
+                                <div class="room-lamp-before"></div>
+                            </div>
+                            <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:48px;opacity:0.3;">🛋️</div>
                         </div>
-                        <div>
-                            <h4>Семейное счастье</h4>
-                            <p>
-                                Николай и Марья счастливы в браке, хотя их характеры очень различаются. 
-                                У них рождаются дети: сын Николенька и две дочери — Анна и Марья. Марья 
-                                привносит в семью духовное начало, учит детей религии и морали, создаёт 
-                                атмосферу любви и взаимопонимания. Николай — практическая опора семьи, 
-                                он занимается хозяйством, обеспечивает материальное благополучие, 
-                                представляет семью в обществе. Вместе они создают гармоничный союз.
-                            </p>
-                            <p>
-                                В их доме в Лысых Горах живут также мать Николая — графиня Наталья, его 
-                                сестра Наташа (после смерти мужа Пьера Безухова она на время переезжает 
-                                к брату) и их дети. Это большой, дружный семейный клан, где царят любовь 
-                                и взаимопонимание. Толстой противопоставляет эту семью разобщённым и 
-                                несчастным семьям других персонажей — например, Курагиных, где каждый 
-                                живёт сам по себе.
-                            </p>
-                            <p>
-                                В эпилоге мы видим Николая как уверенного, уважаемого человека, который 
-                                нашёл своё место в жизни. Он не делает великих открытий, не переживает 
-                                духовных кризисов, как Пьер или Андрей, но живёт достойно и правильно — 
-                                именно так, как Толстой считал правильным для «обыкновенного» человека. 
-                                Николай — воплощение идеала «простой жизни», жизни в согласии с традициями, 
-                                семьёй, народом. Он не герой в романтическом смысле, но герой в смысле 
-                                нравственном — человек, который выполняет свой долг и живёт по совести.
-                            </p>
+                        <div class="score-badge bad">3.2</div>
+                    </div>
+                    <div class="roast-card-content">
+                        <div class="roast-label">The Roast 🔥</div>
+                        <div class="roast-text">
+                            "Okay we need to talk about this overhead light situation. It's giving prison cell, not Pinterest. The curtains are shorter than your attention span and those visible cables are a design crime."
+                        </div>
+                        <div class="roast-issues">
+                            <div class="issue-item">
+                                <span class="issue-icon">💀</span>
+                                <span class="issue-text">Overhead lighting only — the #1 vibe killer</span>
+                            </div>
+                            <div class="issue-item">
+                                <span class="issue-icon">💀</span>
+                                <span class="issue-text">Curtains too short — never acceptable</span>
+                            </div>
+                            <div class="issue-item">
+                                <span class="issue-icon">⚠️</span>
+                                <span class="issue-text">Cables visible everywhere</span>
+                            </div>
+                            <div class="issue-item">
+                                <span class="issue-icon">✓</span>
+                                <span class="issue-text">Good furniture bones, salvageable</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="roast-card">
+                    <div class="roast-card-image">
+                        <div class="room-mock room-mock-after" style="width:100%;">
+                            <div class="room-elements">
+                                <div class="room-sofa-after"></div>
+                                <span class="room-plant">🪴</span>
+                            </div>
+                            <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:48px;opacity:0.3;">✨</div>
+                        </div>
+                        <div class="score-badge good">8.4</div>
+                    </div>
+                    <div class="roast-card-content">
+                        <div class="roast-label">After Glow-Up ✨</div>
+                        <div class="roast-text">
+                            "Okay bestie, Architectural Digest would like to speak with you. The layered lighting hits different. That plant in the corner? Chef's kiss. You understood the assignment and submitted it early."
+                        </div>
+                        <div class="roast-issues">
+                            <div class="issue-item">
+                                <span class="issue-icon">✓</span>
+                                <span class="issue-text">Warm layered lighting — massive upgrade</span>
+                            </div>
+                            <div class="issue-item">
+                                <span class="issue-icon">✓</span>
+                                <span class="issue-text">Floor-to-ceiling curtains — correct</span>
+                            </div>
+                            <div class="issue-item">
+                                <span class="issue-icon">✓</span>
+                                <span class="issue-text">Plant + organic elements added</span>
+                            </div>
+                            <div class="issue-item">
+                                <span class="issue-icon">✓</span>
+                                <span class="issue-text">Cable management — invisible</span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <!-- Карточка 6: Смерть Пети -->
-            <div class="card">
-                <div class="card-header">
-                    <h3>Смерть Пети Ростова</h3>
-                </div>
-                <div class="card-body">
-                    <p>
-                        Одной из самых трагических страниц в жизни Николая становится гибель его младшего 
-                        брата Пети. Петя — шестнадцатилетний мальчик, романтик, мечтающий о подвигах. 
-                        Вопреки воле родителей он тайно отправляется на войну 1812 года, полный энтузиазма 
-                        и патриотизма. Николай узнаёт об этом слишком поздно и не может вернуть брата домой.
-                    </p>
-                    <p>
-                        Петя погибает в партизанском рейде отряда Денисова — его убивают французские 
-                        солдаты. Николай приезжает на место гибели брата и видит его тело. Это становится 
-                        для него страшным ударом. Смерть Пети — одного из самых светлых и чистых персонажей 
-                        романа — показывает жестокость войны, которая не щадит даже детей. Николай винит 
-                        себя в том, что не уберёг брата, не смог предотвратить его гибель.
-                    </p>
-                    <p>
-                        После смерти Пети Николай берёт на себя ответственность за семью. Он становится 
-                        главой рода Ростовых, должен заботиться о матери, о разорённом имении. Эта 
-                        трагедия ускоряет его взросление, делает его более серьёзным и ответственным. 
-                        Смерть Пети — важный момент в формировании характера Николая, его понимания 
-                        жизни, долга и ответственности.
-                    </p>
-                </div>
-            </div>
-
-            <!-- Карточка 7: Отношения с Пьером -->
-            <div class="card">
-                <div class="card-header">
-                    <h3>Дружба с Пьером Безуховым</h3>
-                </div>
-                <div class="card-body">
-                    <p>
-                        Николай Ростов и Пьер Безухов — давние друзья, хотя их характеры и взгляды на 
-                        жизнь совершенно противоположны. Пьер — человек рефлексии, философских исканий, 
-                        постоянных сомнений. Николай — человек действия, традиционных убеждений, безусловной 
-                        веры в правильность существующего порядка. Несмотря на эти различия, между ними 
-                        существует глубокая привязанность и уважение.
-                    </p>
-                    <p>
-                        В эпилоге романа мы видим их дружеские споры. Пьер делится с Николаем своими 
-                        либеральными идеями о необходимости реформ, о тайном обществе, о борьбе с 
-                        «злом» существующего порядка. Николай резко возражает ему, считая такие мысли 
-                        опасными и вредными. Для Николая критика существующего порядка равносильна 
-                        измене отечеству. «Если бы я не знал тебя, я бы счёл это за измену», — говорит 
-                        он Пьеру.
-                    </p>
-                    <p>
-                        Эти споры показывают, как в России начала XIX века формировались два различных 
-                        типа дворянского сознания: консервативное (Николай) и либеральное (Пьер). 
-                        Толстой не занимает однозначной позиции в этом споре — он показывает правоту 
-                        и неправоту обоих. Николай честен и принципиален, но его консерватизм может 
-                        вести к застою. Пьер ищет истину, но его идеи могут быть утопичны. Их дружба 
-                        — пример того, как люди разных убеждений могут сохранять уважение друг к другу.
-                    </p>
-                </div>
-            </div>
         </div>
+    </section>
 
-        <!-- Хронология -->
-        <div class="timeline">
-            <h3>Основные события жизни</h3>
-            <div class="timeline-grid">
-                <div class="timeline-item">
-                    <div class="timeline-year">1805</div>
-                    <div class="timeline-event">Поступление на службу, первые сражения: Шенграбен, Аустерлиц</div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-year">1806</div>
-                    <div class="timeline-event">Возвращение домой, проигрыш в карты Долохову, любовь к Соне</div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-year">1810</div>
-                    <div class="timeline-event">Объяснение с Соней, разрыв по настоянию матери</div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-year">1812</div>
-                    <div class="timeline-event">Отечественная война, Бородино, смерть Пети</div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-year">1813</div>
-                    <div class="timeline-event">Заграничный поход русской армии</div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-year">1814</div>
-                    <div class="timeline-event">Выход в отставку, женитьба на Марье Болконской</div>
-                </div>
+    <!-- ============================================
+         HOW IT WORKS
+    ============================================ -->
+    <section class="how-section" id="how">
+        <div class="section-label reveal">Process</div>
+        <h2 class="section-title reveal reveal-delay-1">Four steps to the truth.</h2>
+        <p class="section-subtitle mt-4 reveal reveal-delay-2">From photo to glow-up in under 10 seconds.</p>
+
+        <div class="steps-grid reveal">
+            <div class="steps-connector"></div>
+
+            <div class="step-card reveal-delay-1">
+                <div class="step-number">01</div>
+                <div class="step-icon">📸</div>
+                <div class="step-title">Upload</div>
+                <div class="step-desc">Drop any photo of your room. No staging needed. Raw truth only.</div>
             </div>
-        </div>
 
-        <!-- Семья -->
-        <div class="family-section">
-            <h3>Семья Николая Ростова</h3>
-            <div class="family-grid">
-                <div class="family-member">
-                    <div class="role">Отец</div>
-                    <div class="name">Илья Ростов</div>
-                </div>
-                <div class="family-member">
-                    <div class="role">Мать</div>
-                    <div class="name">Наталья Ростова</div>
-                </div>
-                <div class="family-member">
-                    <div class="role">Сестра</div>
-                    <div class="name">Наташа Ростова</div>
-                </div>
-                <div class="family-member">
-                    <div class="role">Брат</div>
-                    <div class="name">Петя Ростов</div>
-                </div>
-                <div class="family-member">
-                    <div class="role">Жена</div>
-                    <div class="name">Марья Болконская</div>
-                </div>
-                <div class="family-member">
-                    <div class="role">Друг</div>
-                    <div class="name">Пьер Безухов</div>
-                </div>
+            <div class="step-card reveal-delay-2">
+                <div class="step-number">02</div>
+                <div class="step-icon">🔍</div>
+                <div class="step-title">AI Analyzes</div>
+                <div class="step-desc">Our AI scans lighting, layout, clutter, colors, and vibe. Takes 8 seconds.</div>
             </div>
-        </div>
 
-        <!-- Цитаты -->
-        <div class="quotes">
-            <h3>Цитаты и мысли Николая Ростова</h3>
-            <div class="quotes-grid">
-                <div class="quote">«Я истинно люблю Александра I, я торжествую, я счастлив, что вижу его!» — мысли при виде императора</div>
-                <div class="quote">«Ежели вы хотите быть моим другом, не говорите со мною о ней» — о Соне после разрыва</div>
-                <div class="quote">«Дымятся, горят деревни, и некому их тушить, потому что мужики ушли» — о войне 1812 года</div>
-                <div class="quote">«Я доложу и постараюсь сделать, что можно» — об исполнении воинского долга</div>
+            <div class="step-card reveal-delay-3">
+                <div class="step-number">03</div>
+                <div class="step-icon">🔥</div>
+                <div class="step-title">Get Roasted</div>
+                <div class="step-desc">Score, savage roast, list of issues, and budget-based fixes. The truth hurts.</div>
+            </div>
+
+            <div class="step-card reveal-delay-4">
+                <div class="step-number">04</div>
+                <div class="step-icon">✨</div>
+                <div class="step-title">See the Glow-Up</div>
+                <div class="step-desc">AI generates your room redesigned in 5 different aesthetics. Instantly.</div>
             </div>
         </div>
     </section>
 
-    <!-- Видео -->
-    <section id="video">
-        <h2>Видео о персонаже</h2>
-        
-        <div class="video-grid">
-            <div class="video-card">
-                <div class="video-wrapper" onclick="loadVideo(this, '09983a44bc2232848ae345f0a62e04ec')">
-                    <div class="video-placeholder">
-                        <div class="play-btn">▶</div>
-                        <div class="play-text">Нажмите для воспроизведения</div>
+    <!-- ============================================
+         SCORES SECTION
+    ============================================ -->
+    <section class="scores-section">
+        <div class="scores-inner">
+            <div>
+                <div class="section-label reveal">Score System</div>
+                <h2 class="section-title reveal reveal-delay-1">
+                    Where does<br>your room land?
+                </h2>
+                <p class="section-subtitle mt-4 reveal reveal-delay-2" style="max-width: 400px; margin-left: 0; margin-top: 16px;">
+                    The AI scores 0–10 based on lighting, layout, furniture, color palette, and overall vibe.
+                </p>
+
+                <div class="scores-list">
+                    <div class="score-row reveal reveal-delay-1">
+                        <span class="score-range" style="color: #FF3B30;">0–2</span>
+                        <div>
+                            <div class="score-title-name">Design Disaster</div>
+                            <div class="score-title-sub">We need to talk. Urgently.</div>
+                        </div>
+                        <span class="score-emoji">🚨</span>
                     </div>
-                </div>
-                <div class="video-info">
-                    <h4>Николай Ростов — анализ персонажа</h4>
-                    <p>Разбор характера и судьбы Николая Ростова в романе Л.Н. Толстого.</p>
+                    <div class="score-row reveal reveal-delay-2">
+                        <span class="score-range" style="color: #FF9500;">2–4</span>
+                        <div>
+                            <div class="score-title-name">Struggling But Trying</div>
+                            <div class="score-title-sub">The intention is there. The execution isn't.</div>
+                        </div>
+                        <span class="score-emoji">😬</span>
+                    </div>
+                    <div class="score-row reveal reveal-delay-3">
+                        <span class="score-range" style="color: #FFD60A;">4–6</span>
+                        <div>
+                            <div class="score-title-name">Has Potential</div>
+                            <div class="score-title-sub">Some good, some not. Easy wins available.</div>
+                        </div>
+                        <span class="score-emoji">🤔</span>
+                    </div>
+                    <div class="score-row reveal reveal-delay-4">
+                        <span class="score-range" style="color: #30D158;">6–8</span>
+                        <div>
+                            <div class="score-title-name">Actually Decent</div>
+                            <div class="score-title-sub">You know what you're doing.</div>
+                        </div>
+                        <span class="score-emoji">👍</span>
+                    </div>
+                    <div class="score-row reveal">
+                        <span class="score-range" style="color: #D4AF37;">8–10</span>
+                        <div>
+                            <div class="score-title-name">Architectural Digest Called</div>
+                            <div class="score-title-sub">Answer it. You earned this.</div>
+                        </div>
+                        <span class="score-emoji">✨</span>
+                    </div>
                 </div>
             </div>
 
-            <div class="video-card">
-                <div class="video-wrapper" onclick="loadVideo(this, 'd2163a16fde3cc17ab1879df9387fad1')">
-                    <div class="video-placeholder">
-                        <div class="play-btn">▶</div>
-                        <div class="play-text">Нажмите для воспроизведения</div>
+            <div class="score-display reveal">
+                <div class="score-ring-container">
+                    <svg class="score-ring-svg" viewBox="0 0 200 200">
+                        <circle class="score-ring-bg" cx="100" cy="100" r="80"/>
+                        <circle class="score-ring-fill" id="scoreRing" cx="100" cy="100" r="80" stroke="#FFD60A"/>
+                    </svg>
+                    <div class="score-number-display">
+                        <div class="score-big-num" id="scoreBigNum" style="color: #FFD60A;">5.1</div>
+                        <div class="score-big-den">/ 10</div>
+                        <div style="font-size: 12px; color: var(--secondary); margin-top: 4px;">avg score</div>
                     </div>
                 </div>
-                <div class="video-info">
-                    <h4>Персонажи романа «Война и мир»</h4>
-                    <p>Краткий обзор главных героев романа и их характеров.</p>
+                <div style="text-align: center;">
+                    <div style="font-size: 22px; font-weight: 700; font-family: var(--font-display);">Has Potential</div>
+                    <div style="color: var(--secondary); font-size: 14px; margin-top: 4px;">Most rooms score between 4–7</div>
                 </div>
-            </div>
-
-            <div class="video-card">
-                <div class="video-wrapper" onclick="loadVideo(this, 'a378c84961bf1d105340ab5d45ce5949')">
-                    <div class="video-placeholder">
-                        <div class="play-btn">▶</div>
-                        <div class="play-text">Нажмите для воспроизведения</div>
+                <div style="background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 28px; text-align: center;">
+                    <div style="font-size: 13px; color: var(--secondary); margin-bottom: 8px;">Most common roast</div>
+                    <div style="font-size: 15px; font-style: italic; color: var(--primary);">
+                        "The overhead light is doing your room absolutely no favors."
                     </div>
-                </div>
-                <div class="video-info">
-                    <h4>Образы Болконских</h4>
-                    <p>Анализ образов князей Болконских и их связь с Ростовыми.</p>
-                </div>
-            </div>
-
-            <div class="video-card">
-                <div class="video-wrapper" onclick="loadVideo(this, '374c34e6ff59833bbf8e3338ee4ea084')">
-                    <div class="video-placeholder">
-                        <div class="play-btn">▶</div>
-                        <div class="play-text">Нажмите для воспроизведения</div>
-                    </div>
-                </div>
-                <div class="video-info">
-                    <h4>Психологизм Толстого</h4>
-                    <p>«Диалектика души» — как Толстой раскрывает внутренний мир героев.</p>
+                    <div style="margin-top: 8px; font-family: var(--font-mono); font-size: 11px; color: var(--accent);">said to 68% of rooms</div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Тест -->
-    <section id="test">
-        <h2>Тест: Что вы знаете о Николае Ростове?</h2>
-        
-        <div class="test-container">
-            <div class="test-card" id="test-card">
-                <!-- Контент теста генерируется JavaScript -->
+    <!-- ============================================
+         FIXES SECTION
+    ============================================ -->
+    <section class="fixes-section">
+        <div class="fixes-inner">
+            <div class="reveal">
+                <div class="section-label">Smart Fixes</div>
+                <h2 class="section-title" style="max-width: 400px;">
+                    Budget fixes that actually work.
+                </h2>
+                <p style="color: var(--secondary); max-width: 400px; margin-top: 16px; font-size: 16px; line-height: 1.7;">
+                    AI doesn't just roast you and leave. It gives you a prioritised list of changes ranked by impact and sorted by budget.
+                </p>
+
+                <div style="margin-top: 32px; display: flex; gap: 16px; flex-wrap: wrap;">
+                    <div style="display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--secondary);">
+                        <span style="color: var(--score-green);">●</span>
+                        Free fixes
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--secondary);">
+                        <span style="color: var(--score-yellow);">●</span>
+                        Under $50
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--secondary);">
+                        <span style="color: var(--accent);">●</span>
+                        Under $200
+                    </div>
+                </div>
+            </div>
+
+            <div class="reveal reveal-delay-2">
+                <div class="budget-tabs">
+                    <button class="budget-tab active" onclick="switchBudget(this, 'free')">Free</button>
+                    <button class="budget-tab" onclick="switchBudget(this, '50')">Under $50</button>
+                    <button class="budget-tab" onclick="switchBudget(this, '200')">Under $200</button>
+                </div>
+
+                <div class="fixes-list" id="fixesList">
+                    <!-- Free fixes -->
+                    <div class="fix-card" data-budget="free">
+                        <div class="fix-card-header">
+                            <div class="fix-icon">💡</div>
+                            <div class="fix-card-title">Move your lamp to a corner</div>
+                            <div class="fix-card-budget">FREE</div>
+                        </div>
+                        <div class="fix-card-desc">Turn off the overhead. Put a floor lamp in the corner. Instantly 2x cozier. This single change is responsible for 40% of vibe improvements.</div>
+                        <div class="fix-indicators">
+                            <div class="fix-indicator">
+                                Effort
+                                <div class="fix-dots">
+                                    <div class="fix-dot active"></div>
+                                    <div class="fix-dot"></div>
+                                    <div class="fix-dot"></div>
+                                </div>
+                            </div>
+                            <div class="fix-indicator">
+                                Impact
+                                <div class="fix-dots">
+                                    <div class="fix-dot active"></div>
+                                    <div class="fix-dot active"></div>
+                                    <div class="fix-dot active"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="fix-card" data-budget="free">
+                        <div class="fix-card-header">
+                            <div class="fix-icon">🪴</div>
+                            <div class="fix-card-title">Add one plant</div>
+                            <div class="fix-card-budget">FREE*</div>
+                        </div>
+                        <div class="fix-card-desc">Snake plant. Peace lily. Pothos. Doesn't matter. Organic matter transforms sterile into warm. *Borrow from mom if needed.</div>
+                        <div class="fix-indicators">
+                            <div class="fix-indicator">
+                                Effort
+                                <div class="fix-dots">
+                                    <div class="fix-dot active"></div>
+                                    <div class="fix-dot"></div>
+                                    <div class="fix-dot"></div>
+                                </div>
+                            </div>
+                            <div class="fix-indicator">
+                                Impact
+                                <div class="fix-dots">
+                                    <div class="fix-dot active"></div>
+                                    <div class="fix-dot active"></div>
+                                    <div class="fix-dot"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="fix-card" data-budget="50" style="display:none;">
+                        <div class="fix-card-header">
+                            <div class="fix-icon">🕯️</div>
+                            <div class="fix-card-title">Candles on a tray</div>
+                            <div class="fix-card-budget">$15–25</div>
+                        </div>
+                        <div class="fix-card-desc">3 candles different heights. Wooden or marble tray. Done. That's a $200 aesthetic for $20.</div>
+                        <div class="fix-indicators">
+                            <div class="fix-indicator">
+                                Effort
+                                <div class="fix-dots">
+                                    <div class="fix-dot active"></div>
+                                    <div class="fix-dot"></div>
+                                    <div class="fix-dot"></div>
+                                </div>
+                            </div>
+                            <div class="fix-indicator">
+                                Impact
+                                <div class="fix-dots">
+                                    <div class="fix-dot active"></div>
+                                    <div class="fix-dot active"></div>
+                                    <div class="fix-dot"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="fix-card" data-budget="50" style="display:none;">
+                        <div class="fix-card-header">
+                            <div class="fix-icon">🖼️</div>
+                            <div class="fix-card-title">Poster + frame from IKEA</div>
+                            <div class="fix-card-budget">$20–40</div>
+                        </div>
+                        <div class="fix-card-desc">One large print, properly framed, properly hung (eye level, center). Not three small random frames scattered like confetti.</div>
+                        <div class="fix-indicators">
+                            <div class="fix-indicator">
+                                Effort
+                                <div class="fix-dots">
+                                    <div class="fix-dot active"></div>
+                                    <div class="fix-dot active"></div>
+                                    <div class="fix-dot"></div>
+                                </div>
+                            </div>
+                            <div class="fix-indicator">
+                                Impact
+                                <div class="fix-dots">
+                                    <div class="fix-dot active"></div>
+                                    <div class="fix-dot active"></div>
+                                    <div class="fix-dot active"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="fix-card" data-budget="200" style="display:none;">
+                        <div class="fix-card-header">
+                            <div class="fix-icon">🪟</div>
+                            <div class="fix-card-title">Floor-to-ceiling curtains</div>
+                            <div class="fix-card-budget">$60–150</div>
+                        </div>
+                        <div class="fix-card-desc">Short curtains are the number one sign of inexperienced decorating. Hang them from ceiling to floor. The room looks 40% taller. Non-negotiable.</div>
+                        <div class="fix-indicators">
+                            <div class="fix-indicator">
+                                Effort
+                                <div class="fix-dots">
+                                    <div class="fix-dot active"></div>
+                                    <div class="fix-dot active"></div>
+                                    <div class="fix-dot"></div>
+                                </div>
+                            </div>
+                            <div class="fix-indicator">
+                                Impact
+                                <div class="fix-dots">
+                                    <div class="fix-dot active"></div>
+                                    <div class="fix-dot active"></div>
+                                    <div class="fix-dot active"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Футер -->
+    <!-- ============================================
+         STYLES SECTION
+    ============================================ -->
+    <section class="styles-section" id="styles">
+        <div class="section-label reveal">Design Modes</div>
+        <h2 class="section-title reveal reveal-delay-1">
+            Five aesthetics.<br>Your room, transformed.
+        </h2>
+        <p class="section-subtitle mt-4 reveal reveal-delay-2">
+            AI generates a redesign of your actual room in each style. Not a template — your space.
+        </p>
+
+        <div class="styles-grid reveal reveal-delay-3">
+            <div class="style-card style-cozy">
+                <div class="style-card-image">
+                    <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:48px;opacity:0.6;">🕯️</div>
+                </div>
+                <div class="style-card-content">
+                    <div class="style-card-name">Cozy</div>
+                    <div class="style-card-desc">Warm tones, soft textures, autumn vibes</div>
+                    <div class="style-card-tag">Most Popular</div>
+                </div>
+            </div>
+
+            <div class="style-card style-luxury">
+                <div class="style-card-image">
+                    <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:48px;opacity:0.6;">👑</div>
+                </div>
+                <div class="style-card-content">
+                    <div class="style-card-name">Luxury</div>
+                    <div class="style-card-desc">Dark, dramatic, rich and expensive</div>
+                    <div class="style-card-tag">Premium</div>
+                </div>
+            </div>
+
+            <div class="style-card style-scandi">
+                <div class="style-card-image">
+                    <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:48px;opacity:0.6;">🌿</div>
+                </div>
+                <div class="style-card-content">
+                    <div class="style-card-name">Scandinavian</div>
+                    <div class="style-card-desc">Clean, light, functional, breathing room</div>
+                    <div class="style-card-tag">Free</div>
+                </div>
+            </div>
+
+            <div class="style-card style-minimal">
+                <div class="style-card-image">
+                    <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:48px;opacity:0.3;">○</div>
+                </div>
+                <div class="style-card-content">
+                    <div class="style-card-name">Minimalist</div>
+                    <div class="style-card-desc">Emptiness as art. Less is everything.</div>
+                    <div class="style-card-tag">Premium</div>
+                </div>
+            </div>
+
+            <div class="style-card style-rich">
+                <div class="style-card-image">
+                    <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:48px;opacity:0.6;">🏛️</div>
+                </div>
+                <div class="style-card-content">
+                    <div class="style-card-name">Rich Aesthetic</div>
+                    <div class="style-card-desc">Old money. Linen. Antiques. Quiet luxury.</div>
+                    <div class="style-card-tag">Premium</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         BEFORE/AFTER
+    ============================================ -->
+    <section class="before-after-section">
+        <div class="section-label reveal">Transformation</div>
+        <h2 class="section-title reveal reveal-delay-1">
+            Drag to see the difference.
+        </h2>
+        <p class="section-subtitle mt-4 reveal reveal-delay-2">
+            This is what AI does to a 3.2/10 room. Imagine what it does to yours.
+        </p>
+
+        <div class="before-after-container reveal reveal-delay-3" id="baContainer">
+            <div class="before-after-images">
+                <div class="ba-image ba-before">
+                    <div class="room-elements">
+                        <div class="room-sofa-before" style="width:160px;"></div>
+                        <div class="room-lamp-before"></div>
+                    </div>
+                    <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:72px;opacity:0.2;">🛋️</div>
+                </div>
+                <div class="ba-image ba-after" id="baAfter">
+                    <div class="room-elements">
+                        <div class="room-sofa-after" style="width:160px;"></div>
+                        <span class="room-plant">🪴</span>
+                    </div>
+                    <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:72px;opacity:0.2;">✨</div>
+                </div>
+
+                <div class="ba-label ba-label-before">Before · 3.2</div>
+                <div class="ba-label ba-label-after">After · 8.7</div>
+
+                <div class="ba-divider" id="baDivider">
+                    <div class="ba-handle">⇔</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         SOCIAL PROOF
+    ============================================ -->
+    <section class="social-section">
+        <div class="social-inner">
+            <div class="section-label reveal">What People Say</div>
+            <h2 class="section-title reveal reveal-delay-1">
+                The internet reacted.
+            </h2>
+            <p class="section-subtitle mt-4 reveal reveal-delay-2">
+                Apparently people love being roasted by AI.
+            </p>
+
+            <div class="tweets-grid reveal reveal-delay-3">
+                <div class="tweet-card">
+                    <div class="tweet-header">
+                        <div class="tweet-avatar">🦋</div>
+                        <div>
+                            <div class="tweet-name">Maya Chen</div>
+                            <div class="tweet-handle">@mayachen_design</div>
+                        </div>
+                        <div class="tweet-x">𝕏</div>
+                    </div>
+                    <div class="tweet-text">
+                        AI roasted my bedroom and said the curtains were <span class="tweet-highlight">"shorter than my ambition"</span> and honestly?? That's fair. Genuinely fair. 💀
+                    </div>
+                    <div class="tweet-meta">
+                        <span>❤️ 4.2K</span>
+                        <span>🔁 891</span>
+                    </div>
+                </div>
+
+                <div class="tweet-card">
+                    <div class="tweet-header">
+                        <div class="tweet-avatar">🏠</div>
+                        <div>
+                            <div class="tweet-name">Alex Petrov</div>
+                            <div class="tweet-handle">@alexpetrov_</div>
+                        </div>
+                        <div class="tweet-x">𝕏</div>
+                    </div>
+                    <div class="tweet-text">
+                        Room Roast gave my apartment a <span class="tweet-highlight">2.1/10</span> and called it "a crime scene with WiFi." I'm not okay but I've already bought three lamps.
+                    </div>
+                    <div class="tweet-meta">
+                        <span>❤️ 11.8K</span>
+                        <span>🔁 2.3K</span>
+                    </div>
+                </div>
+
+                <div class="tweet-card">
+                    <div class="tweet-header">
+                        <div class="tweet-avatar">✨</div>
+                        <div>
+                            <div class="tweet-name">Sarah Kim</div>
+                            <div class="tweet-handle">@sarahkim_home</div>
+                        </div>
+                        <div class="tweet-x">𝕏</div>
+                    </div>
+                    <div class="tweet-text">
+                        Followed all the free fixes from Room Roast. Moved one lamp, hid cables, added a plant. <span class="tweet-highlight">Score went from 4 to 7.5.</span> This app is actually insane.
+                    </div>
+                    <div class="tweet-meta">
+                        <span>❤️ 8.9K</span>
+                        <span>🔁 1.7K</span>
+                    </div>
+                </div>
+
+                <div class="tweet-card">
+                    <div class="tweet-header">
+                        <div class="tweet-avatar">🎨</div>
+                        <div>
+                            <div class="tweet-name">Tom Walsh</div>
+                            <div class="tweet-handle">@tomwalsh_nyc</div>
+                        </div>
+                        <div class="tweet-x">𝕏</div>
+                    </div>
+                    <div class="tweet-text">
+                        The AI said my living room has <span class="tweet-highlight">"the energy of someone who gave up."</span> Sir. SIR. I did not come here to be perceived like this.
+                    </div>
+                    <div class="tweet-meta">
+                        <span>❤️ 22.1K</span>
+                        <span>🔁 5.4K</span>
+                    </div>
+                </div>
+
+                <div class="tweet-card">
+                    <div class="tweet-header">
+                        <div class="tweet-avatar">🌿</div>
+                        <div>
+                            <div class="tweet-name">Julia Morris</div>
+                            <div class="tweet-handle">@juliamorris</div>
+                        </div>
+                        <div class="tweet-x">𝕏</div>
+                    </div>
+                    <div class="tweet-text">
+                        Got a 9.2/10 from Room Roast and I screenshot it and sent it to my entire family. Validation from an AI hits different. <span class="tweet-highlight">I am thriving.</span> 
+                    </div>
+                    <div class="tweet-meta">
+                        <span>❤️ 6.3K</span>
+                        <span>🔁 942</span>
+                    </div>
+                </div>
+
+                <div class="tweet-card">
+                    <div class="tweet-header">
+                        <div class="tweet-avatar">🔥</div>
+                        <div>
+                            <div class="tweet-name">Dev Patel</div>
+                            <div class="tweet-handle">@devpatel_builds</div>
+                        </div>
+                        <div class="tweet-x">𝕏</div>
+                    </div>
+                    <div class="tweet-text">
+                        Room Roast is the best app I've seen in years. Simple, funny, actually useful. <span class="tweet-highlight">The Luxury redesign of my bedroom made me gasp.</span> Genuinely.
+                    </div>
+                    <div class="tweet-meta">
+                        <span>❤️ 3.8K</span>
+                        <span>🔁 612</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         PRICING
+    ============================================ -->
+    <section class="pricing-section" id="pricing">
+        <div class="section-label reveal">Pricing</div>
+        <h2 class="section-title reveal reveal-delay-1">
+            Start free.<br>Go premium when you're ready.
+        </h2>
+        <p class="section-subtitle mt-4 reveal reveal-delay-2">
+            Your room deserves the full truth.
+        </p>
+
+        <div class="pricing-grid reveal reveal-delay-3">
+            <!-- Free -->
+            <div class="pricing-card">
+                <div class="pricing-plan">Free</div>
+                <div class="pricing-price">$0</div>
+                <div class="pricing-period">Forever free</div>
+
+                <ul class="pricing-features">
+                    <li class="pricing-feature">
+                        <span class="pricing-check">✓</span>
+                        <span class="pricing-feature-text available">1 roast per day</span>
+                    </li>
+                    <li class="pricing-feature">
+                        <span class="pricing-check">✓</span>
+                        <span class="pricing-feature-text available">Aesthetic score</span>
+                    </li>
+                    <li class="pricing-feature">
+                        <span class="pricing-check">✓</span>
+                        <span class="pricing-feature-text available">Short roast (2 lines)</span>
+                    </li>
+                    <li class="pricing-feature">
+                        <span class="pricing-check">✓</span>
+                        <span class="pricing-feature-text available">Top 3 issues</span>
+                    </li>
+                    <li class="pricing-feature">
+                        <span class="pricing-check">✓</span>
+                        <span class="pricing-feature-text available">1 redesign style</span>
+                    </li>
+                    <li class="pricing-feature">
+                        <span class="pricing-x">✕</span>
+                        <span class="pricing-feature-text">Savage Mode</span>
+                    </li>
+                    <li class="pricing-feature">
+                        <span class="pricing-x">✕</span>
+                        <span class="pricing-feature-text">Shopping links</span>
+                    </li>
+                    <li class="pricing-feature">
+                        <span class="pricing-x">✕</span>
+                        <span class="pricing-feature-text">Roast history</span>
+                    </li>
+                </ul>
+
+                <button class="btn-pricing-free">Get Started Free</button>
+            </div>
+
+            <!-- Premium Monthly - Featured -->
+            <div class="pricing-card featured">
+                <div class="pricing-featured-badge">BEST VALUE</div>
+                <div class="pricing-plan" style="color: var(--gold);">Premium</div>
+                <div class="pricing-price" style="color: var(--gold);">$7.99</div>
+                <div class="pricing-period">per month · cancel anytime</div>
+
+                <ul class="pricing-features">
+                    <li class="pricing-feature">
+                        <span class="pricing-check">✓</span>
+                        <span class="pricing-feature-text available">Unlimited roasts</span>
+                    </li>
+                    <li class="pricing-feature">
+                        <span class="pricing-check">✓</span>
+                        <span class="pricing-feature-text available">Full extended roast</span>
+                    </li>
+                    <li class="pricing-feature">
+                        <span class="pricing-check">✓</span>
+                        <span class="pricing-feature-text available">All 5 redesign styles</span>
+                    </li>
+                    <li class="pricing-feature">
+                        <span class="pricing-check">✓</span>
+                        <span class="pricing-feature-text available">Savage Mode 🔥</span>
+                    </li>
+                    <li class="pricing-feature">
+                        <span class="pricing-check">✓</span>
+                        <span class="pricing-feature-text available">Shopping recommendations</span>
+                    </li>
+                    <li class="pricing-feature">
+                        <span class="pricing-check">✓</span>
+                        <span class="pricing-feature-text available">Full roast history</span>
+                    </li>
+                    <li class="pricing-feature">
+                        <span class="pricing-check">✓</span>
+                        <span class="pricing-feature-text available">Style DNA report</span>
+                    </li>
+                    <li class="pricing-feature">
+                        <span class="pricing-check">✓</span>
+                        <span class="pricing-feature-text available">No watermark</span>
+                    </li>
+                </ul>
+
+                <button class="btn-pricing-premium">Start 3-Day Free Trial</button>
+            </div>
+
+            <!-- Yearly -->
+            <div class="pricing-card">
+                <div class="pricing-plan">Annual</div>
+                <div class="pricing-price">$39</div>
+                <div class="pricing-period">per year · save 60%</div>
+
+                <ul class="pricing-features">
+                    <li class="pricing-feature">
+                        <span class="pricing-check">✓</span>
+                        <span class="pricing-feature-text available">Everything in Premium</span>
+                    </li>
+                    <li class="pricing-feature">
+                        <span class="pricing-check">✓</span>
+                        <span class="pricing-feature-text available">Room comparison over time</span>
+                    </li>
+                    <li class="pricing-feature">
+                        <span class="pricing-check">✓</span>
+                        <span class="pricing-feature-text available">Priority AI processing</span>
+                    </li>
+                    <li class="pricing-feature">
+                        <span class="pricing-check">✓</span>
+                        <span class="pricing-feature-text available">Early access to new styles</span>
+                    </li>
+                    <li class="pricing-feature">
+                        <span class="pricing-check">✓</span>
+                        <span class="pricing-feature-text available">= $3.33 / month</span>
+                    </li>
+                </ul>
+
+                <button class="btn-pricing-premium" style="background: var(--primary); color: var(--bg);">
+                    Get Annual Plan
+                </button>
+            </div>
+        </div>
+
+        <p style="margin-top: 32px; font-size: 14px; color: var(--secondary);">
+            Cancel anytime. No judgment. (Unlike your room.)
+        </p>
+    </section>
+
+    <!-- ============================================
+         FAQ
+    ============================================ -->
+    <section class="faq-section" id="faq">
+        <div class="text-center">
+            <div class="section-label reveal">FAQ</div>
+            <h2 class="section-title reveal reveal-delay-1">Questions we get roasted with.</h2>
+        </div>
+
+        <div class="faq-list">
+            <div class="faq-item reveal">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    Is the roast actually honest or just nice?
+                    <div class="faq-icon">+</div>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-inner">
+                        Brutally honest, but not cruel. The AI is trained to be like a very direct friend who actually knows design — it will tell you the overhead lighting is destroying your vibe without making you feel bad about yourself. The room is roasted, not the person.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item reveal reveal-delay-1">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    What kind of photos work best?
+                    <div class="faq-icon">+</div>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-inner">
+                        Wide shots that show most of the room work best. Natural lighting helps but isn't required — in fact, if your lighting is bad, AI will definitely notice. Any photo from your phone works. The messier the room, the more interesting the roast.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item reveal reveal-delay-2">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    Are my photos stored or used for training?
+                    <div class="faq-icon">+</div>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-inner">
+                        Your photos are processed securely and only stored in your personal history. They are never used to train AI models, never shared publicly without your explicit consent, and you can delete them anytime from your profile.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item reveal reveal-delay-3">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    How does the AI redesign actually work?
+                    <div class="faq-icon">+</div>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-inner">
+                        After analysing your room, the AI generates a reimagined version using your actual space as a base — same layout, same window positions, but with the style applied. It's not a random template. It uses your specific room's dimensions and structure.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item reveal reveal-delay-4">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    Can I roast rooms that aren't mine?
+                    <div class="faq-icon">+</div>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-inner">
+                        Technically yes. The AI doesn't verify ownership. People regularly roast their parents' living rooms, Airbnbs they're staying in, or rooms from real estate listings. We take no responsibility for any family arguments that result.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item reveal">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    What if I get a high score?
+                    <div class="faq-icon">+</div>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-inner">
+                        The AI will congratulate you with the same level of energy it uses to roast everyone else. A 9/10 room gets told Architectural Digest should be calling. Screenshots are encouraged. Bragging is mandatory.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         FINAL CTA
+    ============================================ -->
+    <section class="cta-section">
+        <div class="cta-bg-glow"></div>
+        <div class="cta-inner">
+            <div class="section-label reveal">Ready?</div>
+            <h2 class="cta-title reveal reveal-delay-1">
+                Your room called.<br>
+                <span style="color: var(--accent);">It wants a glow-up.</span>
+            </h2>
+            <p class="cta-subtitle reveal reveal-delay-2">
+                Find out your aesthetic score in 10 seconds. Free.
+            </p>
+
+            <div class="reveal reveal-delay-3">
+                <a href="#upload" class="btn-primary" style="font-size: 18px; padding: 20px 48px; display: inline-flex;">
+                    🔥 Roast My Room — It's Free
+                </a>
+            </div>
+
+            <div class="store-badges reveal reveal-delay-4">
+                <a href="#" class="store-badge">
+                    <div class="store-badge-icon">🍎</div>
+                    <div>
+                        <div class="store-badge-text-top">Download on the</div>
+                        <div class="store-badge-text-bottom">App Store</div>
+                    </div>
+                </a>
+                <a href="#" class="store-badge">
+                    <div class="store-badge-icon">▶</div>
+                    <div>
+                        <div class="store-badge-text-top">Get it on</div>
+                        <div class="store-badge-text-bottom">Google Play</div>
+                    </div>
+                </a>
+            </div>
+
+            <p class="reveal" style="margin-top: 24px; font-size: 13px; color: var(--secondary);">
+                No account needed. No credit card. Just your room and the truth.
+            </p>
+        </div>
+    </section>
+
+    <!-- ============================================
+         FOOTER
+    ============================================ -->
     <footer>
-        <p>Образовательный проект о литературе</p>
-        <p class="copyright">Л.Н. Толстой «Война и мир» (1863-1869)</p>
+        <div class="footer-inner">
+            <div class="footer-logo">🏠 Room<span>Roast</span></div>
+
+            <div class="footer-links">
+                <a href="#" class="footer-link">Privacy Policy</a>
+                <a href="#" class="footer-link">Terms of Service</a>
+                <a href="#" class="footer-link">Contact</a>
+                <a href="#" class="footer-link">Press Kit</a>
+                <a href="#" class="footer-link">Twitter / X</a>
+                <a href="#" class="footer-link">TikTok</a>
+            </div>
+
+            <div class="footer-copy">
+                © 2024 Room Roast. All rooms judged equally. · Made with 🔥 and absolutely no mercy.
+            </div>
+        </div>
     </footer>
 
+    <!-- ============================================
+         JAVASCRIPT
+    ============================================ -->
     <script>
-        // Данные теста
-        const questions = [
-            {
-                question: "Кем был Николай Ростов по происхождению?",
-                options: ["Крестьянином", "Дворянином", "Купцом", "Священником"],
-                correct: 1
-            },
-            {
-                question: "В каком полку служил Николай Ростов?",
-                options: ["В пехотном", "В гусарском", "В артиллерийском", "В кавалергардском"],
-                correct: 1
-            },
-            {
-                question: "Кем приходилась Наташа Ростову Николаю?",
-                options: ["Кузиной", "Сестрой", "Женой", "Племянницей"],
-                correct: 1
-            },
-            {
-                question: "В кого Николай был влюблён в начале романа?",
-                options: ["В Наташу", "В Соню", "В Марью", "В Веру"],
-                correct: 1
-            },
-            {
-                question: "На ком Николай Ростов женился в конце романа?",
-                options: ["На Соне", "На Наташе", "На Марье Болконской", "На Елене Курагиной"],
-                correct: 2
-            },
-            {
-                question: "Какое сражение Николай Ростов принял участие в 1805 году?",
-                options: ["Бородинское", "Шенграбенское и Аустерлицкое", "Куликовскую битву", "Битву под Лейпцигом"],
-                correct: 1
-            },
-            {
-                question: "Какая черта характера была главной у Николая Ростова?",
-                options: ["Хитрость", "Честность и прямолинейность", "Лень", "Трусость"],
-                correct: 1
-            },
-            {
-                question: "Как звали младшего брата Николая Ростова, погибшего на войне?",
-                options: ["Пётр (Петя)", "Андрей", "Павел", "Сергей"],
-                correct: 0
-            },
-            {
-                question: "Чем Николай Ростов отличался от своего отца в ведении хозяйства?",
-                options: ["Был таким же расточительным", "Стал хорошим и энергичным хозяином", "Продал имение", "Отдал всё управляющему"],
-                correct: 1
-            },
-            {
-                question: "Кто стал близким другом Николая Ростова?",
-                options: ["Анатоль Курагин", "Пьер Безухов", "Фёдор Долохов", "Борис Друбецкой"],
-                correct: 1
+        // ==========================================
+        // NAVIGATION
+        // ==========================================
+        const navbar = document.getElementById('navbar');
+        const hamburger = document.getElementById('hamburger');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileClose = document.getElementById('mobileClose');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 60) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
             }
-        ];
+        });
 
-        let currentQuestion = 0;
-        let score = 0;
-        let answered = false;
+        hamburger.addEventListener('click', () => {
+            mobileMenu.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        });
 
-        // Загрузка видео при клике
-        function loadVideo(wrapper, videoId) {
-            const placeholder = wrapper.querySelector('.video-placeholder');
-            if (placeholder) {
-                placeholder.remove();
-                const iframe = document.createElement('iframe');
-                iframe.src = `https://rutube.ru/play/embed/${videoId}`;
-                iframe.title = 'Видео';
-                iframe.allow = 'accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
-                iframe.allowFullscreen = true;
-                wrapper.appendChild(iframe);
-            }
+        function closeMobileMenu() {
+            mobileMenu.classList.remove('open');
+            document.body.style.overflow = '';
         }
 
-        // Навигация
-        function scrollToSection(sectionId) {
-            const element = document.getElementById(sectionId);
-            element.scrollIntoView({ behavior: 'smooth' });
-            
-            // Обновляем активную кнопку
-            document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
-            document.getElementById('btn-' + sectionId).classList.add('active');
-        }
+        mobileClose.addEventListener('click', closeMobileMenu);
 
-        // Рендер теста
-        function renderTest() {
-            const testCard = document.getElementById('test-card');
-            
-            const progress = ((currentQuestion) / questions.length) * 100;
-            
-            testCard.innerHTML = `
-                <div class="test-header">
-                    <h3>
-                        <span>Вопрос ${currentQuestion + 1} из ${questions.length}</span>
-                        <span class="score-badge">Баллы: ${score}</span>
-                    </h3>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: ${progress}%"></div>
-                    </div>
-                </div>
-                <div class="test-body">
-                    <p class="question">${questions[currentQuestion].question}</p>
-                    <div class="options" id="options">
-                        ${questions[currentQuestion].options.map((option, index) => `
-                            <button class="option" onclick="selectAnswer(${index})">
-                                <strong>${String.fromCharCode(65 + index)}.</strong> ${option}
-                            </button>
-                        `).join('')}
-                    </div>
-                    <button class="next-btn" id="next-btn" style="display: none;" onclick="nextQuestion()">
-                        ${currentQuestion < questions.length - 1 ? 'Следующий вопрос' : 'Показать результат'}
-                    </button>
-                </div>
-            `;
-            
-            answered = false;
-        }
+        // ==========================================
+        // SCROLL REVEAL
+        // ==========================================
+        const revealElements = document.querySelectorAll('.reveal');
 
-        // Выбор ответа
-        function selectAnswer(index) {
-            if (answered) return;
-            answered = true;
-            
-            const options = document.querySelectorAll('.option');
-            const correct = questions[currentQuestion].correct;
-            
-            options.forEach((opt, i) => {
-                opt.classList.add('disabled');
-                if (i === correct) {
-                    opt.classList.add('correct');
-                } else if (i === index && i !== correct) {
-                    opt.classList.add('wrong');
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
                 }
             });
-            
-            if (index === correct) {
-                score++;
+        }, {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        });
+
+        revealElements.forEach(el => revealObserver.observe(el));
+
+        // ==========================================
+        // COUNTER ANIMATION
+        // ==========================================
+        function animateCounter(element, target, duration = 2000) {
+            const start = 0;
+            const startTime = performance.now();
+
+            function update(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const eased = 1 - Math.pow(1 - progress, 3);
+                const current = Math.floor(eased * target);
+
+                if (target > 1000) {
+                    element.textContent = current.toLocaleString();
+                } else {
+                    element.textContent = current;
+                }
+
+                if (progress < 1) {
+                    requestAnimationFrame(update);
+                } else {
+                    element.textContent = target.toLocaleString();
+                }
             }
-            
-            document.getElementById('next-btn').style.display = 'block';
+
+            requestAnimationFrame(update);
         }
 
-        // Следующий вопрос
-        function nextQuestion() {
-            currentQuestion++;
-            
-            if (currentQuestion >= questions.length) {
-                showResult();
-            } else {
-                renderTest();
-            }
-        }
-
-        // Показать результат
-        function showResult() {
-            const testCard = document.getElementById('test-card');
-            const percent = Math.round((score / questions.length) * 100);
-            
-            let message = '';
-            if (score === questions.length) {
-                message = 'Превосходно! Вы отлично знаете Николая Ростова!';
-            } else if (score >= 7) {
-                message = 'Хорошо! У вас хорошие знания о персонаже!';
-            } else if (score >= 5) {
-                message = 'Неплохо! Но есть куда расти.';
-            } else {
-                message = 'Рекомендуем перечитать биографию и пройти тест снова.';
-            }
-            
-            testCard.innerHTML = `
-                <div class="test-header">
-                    <h3 style="justify-content: center;">Результат теста</h3>
-                </div>
-                <div class="result">
-                    <div class="result-score">${score} / ${questions.length}</div>
-                    <div class="progress-bar" style="margin-bottom: 1.5rem;">
-                        <div class="progress-fill" style="width: ${percent}%"></div>
-                    </div>
-                    <p class="result-text">${message}</p>
-                    <p class="result-percent">Правильных ответов: ${score} из ${questions.length} (${percent}%)</p>
-                    <button class="restart-btn" onclick="restartTest()">Пройти тест заново</button>
-                </div>
-            `;
-        }
-
-        // Перезапуск теста
-        function restartTest() {
-            currentQuestion = 0;
-            score = 0;
-            answered = false;
-            renderTest();
-        }
-
-        // Инициализация
-        document.addEventListener('DOMContentLoaded', function() {
-            renderTest();
-            
-            // Отслеживание прокрутки для активной кнопки
-            const sections = ['bio', 'video', 'test'];
-            
-            window.addEventListener('scroll', function() {
-                let current = '';
-                
-                sections.forEach(sectionId => {
-                    const section = document.getElementById(sectionId);
-                    const rect = section.getBoundingClientRect();
-                    
-                    if (rect.top <= 150) {
-                        current = sectionId;
+        const counterObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const target = parseInt(entry.target.dataset.count);
+                    if (target) {
+                        animateCounter(entry.target, target);
+                        counterObserver.unobserve(entry.target);
                     }
-                });
-                
-                document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
-                document.getElementById('btn-' + current).classList.add('active');
+                }
+            });
+        }, { threshold: 0.5 });
+
+        document.querySelectorAll('[data-count]').forEach(el => {
+            counterObserver.observe(el);
+        });
+
+        // ==========================================
+        // SCORE RING ANIMATION
+        // ==========================================
+        const scoreRing = document.getElementById('scoreRing');
+        const circumference = 502;
+
+        const scoreObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const score = 5.1;
+                    const percentage = score / 10;
+                    const offset = circumference - (percentage * circumference);
+                    scoreRing.style.strokeDashoffset = offset;
+                    scoreObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        const scoreSection = document.querySelector('.score-ring-container');
+        if (scoreSection) scoreObserver.observe(scoreSection);
+
+        // ==========================================
+        // BEFORE/AFTER SLIDER
+        // ==========================================
+        const baContainer = document.getElementById('baContainer');
+        const baAfter = document.getElementById('baAfter');
+        const baDivider = document.getElementById('baDivider');
+
+        let isDragging = false;
+
+        function updateSlider(x) {
+            const rect = baContainer.getBoundingClientRect();
+            const relX = Math.max(0, Math.min(x - rect.left, rect.width));
+            const percentage = (relX / rect.width) * 100;
+
+            baAfter.style.clipPath = `inset(0 ${100 - percentage}% 0 0)`;
+            baDivider.style.left = `${percentage}%`;
+        }
+
+        baContainer.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            updateSlider(e.clientX);
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (isDragging) updateSlider(e.clientX);
+        });
+
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+        });
+
+        baContainer.addEventListener('touchstart', (e) => {
+            isDragging = true;
+            updateSlider(e.touches[0].clientX);
+        }, { passive: true });
+
+        document.addEventListener('touchmove', (e) => {
+            if (isDragging) updateSlider(e.touches[0].clientX);
+        }, { passive: true });
+
+        document.addEventListener('touchend', () => {
+            isDragging = false;
+        });
+
+        // Auto-animate the slider on load
+        let autoSlider;
+        const baObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    let pos = 0;
+                    let direction = 1;
+                    autoSlider = setInterval(() => {
+                        pos += direction * 1;
+                        if (pos >= 100) direction = -1;
+                        if (pos <= 0) direction = 1;
+                        const rect = baContainer.getBoundingClientRect();
+                        const x = rect.left + (pos / 100) * rect.width;
+                        updateSlider(x);
+                    }, 20);
+                    baObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        if (baContainer) baObserver.observe(baContainer);
+
+        baContainer.addEventListener('mousedown', () => clearInterval(autoSlider));
+        baContainer.addEventListener('touchstart', () => clearInterval(autoSlider));
+
+        // ==========================================
+        // BUDGET TABS
+        // ==========================================
+        function switchBudget(btn, budget) {
+            document.querySelectorAll('.budget-tab').forEach(t => t.classList.remove('active'));
+            btn.classList.add('active');
+
+            const allFixes = document.querySelectorAll('.fix-card');
+            allFixes.forEach(card => {
+                card.style.display = card.dataset.budget === budget ? 'block' : 'none';
+            });
+        }
+
+        // ==========================================
+        // FAQ TOGGLE
+        // ==========================================
+        function toggleFaq(questionEl) {
+            const item = questionEl.parentElement;
+            const isOpen = item.classList.contains('open');
+
+            document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+
+            if (!isOpen) {
+                item.classList.add('open');
+            }
+        }
+
+        // ==========================================
+        // UPLOAD DEMO INTERACTION
+        // ==========================================
+        const uploadDemo = document.getElementById('uploadDemo');
+
+        uploadDemo.addEventListener('click', () => {
+            uploadDemo.style.borderColor = 'var(--accent)';
+            uploadDemo.querySelector('.upload-icon').textContent = '⏳';
+            uploadDemo.querySelector('.upload-title').textContent = 'Processing your room...';
+            uploadDemo.querySelector('.upload-subtitle').textContent = 'AI is forming its opinions';
+
+            setTimeout(() => {
+                uploadDemo.style.borderColor = 'var(--score-green)';
+                uploadDemo.querySelector('.upload-icon').textContent = '✅';
+                uploadDemo.querySelector('.upload-title').textContent = 'Download the app to see results';
+                uploadDemo.querySelector('.upload-subtitle').textContent = 'Available on iOS and Android';
+
+                setTimeout(() => {
+                    uploadDemo.style.borderColor = 'var(--border)';
+                    uploadDemo.querySelector('.upload-icon').textContent = '📸';
+                    uploadDemo.querySelector('.upload-title').textContent = 'Drop your room here';
+                    uploadDemo.querySelector('.upload-subtitle').textContent = 'or tap to upload from your phone';
+                }, 3000);
+            }, 2000);
+        });
+
+        uploadDemo.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadDemo.style.borderColor = 'var(--accent)';
+        });
+
+        uploadDemo.addEventListener('dragleave', () => {
+            uploadDemo.style.borderColor = 'var(--border)';
+        });
+
+        uploadDemo.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadDemo.style.borderColor = 'var(--score-green)';
+            uploadDemo.querySelector('.upload-icon').textContent = '✅';
+            uploadDemo.querySelector('.upload-title').textContent = 'Got it. Download the app for results!';
+
+            setTimeout(() => {
+                uploadDemo.style.borderColor = 'var(--border)';
+                uploadDemo.querySelector('.upload-icon').textContent = '📸';
+                uploadDemo.querySelector('.upload-title').textContent = 'Drop your room here';
+            }, 3000);
+        });
+
+        // ==========================================
+        // SMOOTH SCROLL FOR NAV LINKS
+        // ==========================================
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (href === '#') return;
+                e.preventDefault();
+                const target = document.querySelector(href);
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
             });
         });
     </script>
+
 </body>
 </html>
