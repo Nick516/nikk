@@ -972,38 +972,13 @@
         gordon:   `You are Room Roast in GORDON RAMSAY MODE. You react to this room EXACTLY like Gordon Ramsay reacts to bad food. Use his speech patterns. Get angry at design crimes. "This room is a DISASTER." "What is this CABLE doing here?!" Be dramatic and hilarious.`
     };
 
-    const SCHEMA = `
-Respond ONLY with this exact JSON — no extra text, no markdown:
-{
-  "score": <number 0.0–10.0>,
-  "score_title": "<title>",
-  "score_subtitle": "<one short sentence>",
-  "roast": "<2–4 sentence roast. Be SPECIFIC about what you actually see in the photo — mention real items, colors, furniture you can observe>",
-  "issues": [
-    {"icon":"<emoji>","text":"<specific issue you see>","severity":"critical"},
-    {"icon":"<emoji>","text":"<specific issue>","severity":"warning"},
-    {"icon":"<emoji>","text":"<specific issue>","severity":"warning"},
-    {"icon":"<emoji>","text":"<specific issue>","severity":"minor"},
-    {"icon":"<emoji>","text":"<specific issue>","severity":"minor"}
-  ],
-  "fixes": [
-    {"icon":"<emoji>","text":"<specific free fix for this exact room>","budget":"FREE"},
-    {"icon":"<emoji>","text":"<specific fix>","budget":"$10–30"},
-    {"icon":"<emoji>","text":"<specific fix>","budget":"$30–80"}
-  ],
-  "style_dna": "<2 sentences about current aesthetic and what the room is trying to be>",
-  "potential_score": <number — what score this room could reach>
-}
+   const SCHEMA = `
+You MUST respond with ONLY a valid JSON object. No markdown. No code blocks. No explanation. No text before or after. Just the raw JSON.
 
-Score guide:
-0–2 = Design Disaster
-2–4 = Struggling But Trying
-4–6 = Has Potential
-6–8 = Actually Decent
-8–9 = Living Well
-9–10 = Architectural Digest Called
+Example of exact format required:
+{"score":4.5,"score_title":"Has Potential","score_subtitle":"Some good choices buried under fixable mistakes","roast":"The overhead light is doing this room absolutely no favors. Combined with those short curtains and visible cables everywhere, this space is working against itself. The furniture bones are actually decent though.","issues":[{"icon":"💡","text":"Overhead lighting only - the number one vibe killer","severity":"critical"},{"icon":"🪟","text":"Curtains too short, hanging mid-window","severity":"critical"},{"icon":"🔌","text":"Cables visible along the floor","severity":"warning"},{"icon":"🪴","text":"No plants or organic elements","severity":"warning"},{"icon":"🎨","text":"No focal point or art on walls","severity":"minor"}],"fixes":[{"icon":"💡","text":"Move any lamp to the corner and turn off overhead light tonight","budget":"FREE"},{"icon":"🕯️","text":"Add 3 candles on a small tray for instant warmth","budget":"$15-25"},{"icon":"🪟","text":"Replace curtains with floor-to-ceiling panels","budget":"$40-80"}],"style_dna":"This room is attempting a neutral modern look but hasn't committed. With better lighting and a few intentional pieces it could reach a clean contemporary aesthetic.","potential_score":7.5}
 
-CRITICAL RULE: Be specific. Mention the actual things you see. Do not write generic advice.`;
+Now analyze the room in the photo and return JSON in that exact format.`;
 
     const LOADING_TEXTS = [
         'Scanning for crimes against design...',
@@ -1102,10 +1077,10 @@ CRITICAL RULE: Be specific. Mention the actual things you see. Do not write gene
                 contents: [{
                     parts: [
                         { inline_data: { mime_type: selectedFile.type, data: b64 } },
-                        { text: `${PROMPTS[selectedStyle]}\n\nAnalyze this room photo carefully. Look at: lighting type and quality, furniture style and arrangement, color palette cohesion, visible clutter or cables, decor items, overall aesthetic and vibe.\n\n${SCHEMA}` }
+                        { text: `${PROMPTS[selectedStyle]}\n\nAnalyze the room in this photo. Look at lighting, furniture, colors, clutter, cables, decor, and overall vibe.\n\n${SCHEMA}` }
                     ]
                 }],
-                generationConfig: { temperature: 0.85, maxOutputTokens: 1200 }
+                generationConfig: { temperature: 0.4,maxOutputTokens: 2000,responseMimeType: "application/json"}
             };
 
             const res = await fetch(API_URL, {
