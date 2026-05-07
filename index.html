@@ -831,10 +831,9 @@
 
     // Только те модели которые есть в твоём ключе
     const MODELS = [
-        'gemini-2.5-flash',
-        'gemini-2.5-pro',
-        'gemini-2.0-flash',
-        'gemini-2.0-flash-001'
+    'gemini-1.5-flash',
+    'gemini-1.5-pro',
+    'gemini-1.0-pro-vision-latest'
     ];
 
     let selectedFile = null;
@@ -963,7 +962,6 @@ IMPORTANT: Be specific. Mention actual things you see. Never write generic advic
                 generationConfig: {
                     temperature: 0.4,
                     maxOutputTokens: 2000,
-                    responseMimeType: "application/json"
                 }
             };
 
