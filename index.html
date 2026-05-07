@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,62 +10,27 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
         :root {
-            --bg: #0A0A0A;
-            --surface: #141414;
-            --surface2: #1E1E1E;
-            --border: #2A2A2A;
-            --primary: #E8D5B7;
-            --secondary: #6B6B6B;
-            --accent: #FF6B35;
-            --score-red: #FF3B30;
-            --score-yellow: #FFD60A;
-            --score-green: #30D158;
-            --gold: #D4AF37;
-            --white: #FFFFFF;
-            --font-display: 'Playfair Display', serif;
-            --font-body: 'Inter', sans-serif;
-            --font-mono: 'JetBrains Mono', monospace;
-            --radius: 16px;
-            --radius-sm: 8px;
-            --radius-lg: 24px;
+            --bg: #0A0A0A; --surface: #141414; --surface2: #1E1E1E; --border: #2A2A2A;
+            --primary: #E8D5B7; --secondary: #6B6B6B; --accent: #FF6B35;
+            --score-red: #FF3B30; --score-yellow: #FFD60A; --score-green: #30D158;
+            --gold: #D4AF37; --white: #FFFFFF;
+            --font-display: 'Playfair Display', serif; --font-body: 'Inter', sans-serif; --font-mono: 'JetBrains Mono', monospace;
+            --radius: 16px; --radius-sm: 8px; --radius-lg: 24px;
             --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-
         html { scroll-behavior: smooth; overflow-x: hidden; }
-
-        body {
-            background: var(--bg);
-            color: var(--primary);
-            font-family: var(--font-body);
-            font-size: 16px;
-            line-height: 1.6;
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-        }
-
+        body { background: var(--bg); color: var(--primary); font-family: var(--font-body); font-size: 16px; line-height: 1.6; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
         img { max-width: 100%; height: auto; display: block; }
         a { text-decoration: none; color: inherit; }
         button { cursor: pointer; border: none; background: none; font-family: inherit; }
-
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: var(--bg); }
         ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
 
         /* NAV */
-        nav {
-            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-            padding: 20px 40px;
-            display: flex; align-items: center; justify-content: space-between;
-            transition: var(--transition);
-        }
-        nav.scrolled {
-            background: rgba(10,10,10,0.9);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border);
-            padding: 16px 40px;
-        }
+        nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 20px 40px; display: flex; align-items: center; justify-content: space-between; transition: var(--transition); }
+        nav.scrolled { background: rgba(10,10,10,0.9); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); padding: 16px 40px; }
         .nav-logo { font-family: var(--font-display); font-size: 22px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
         .nav-logo span { color: var(--accent); }
         .nav-links { display: flex; align-items: center; gap: 32px; list-style: none; }
@@ -314,83 +278,34 @@
         .reveal-delay-4 { transition-delay: 0.4s; }
 
         /* AI MODAL */
-        .ai-modal-overlay {
-            display: none; position: fixed; inset: 0;
-            background: rgba(0,0,0,0.95); z-index: 9999;
-            overflow-y: auto; padding: 20px;
-        }
+        .ai-modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 9999; overflow-y: auto; padding: 20px; }
         .ai-modal-overlay.open { display: block; }
-        .ai-modal-box {
-            max-width: 700px; margin: 40px auto;
-            background: #141414; border: 1px solid #2A2A2A;
-            border-radius: 24px; overflow: hidden;
-        }
-        .ai-modal-header {
-            padding: 24px 28px; border-bottom: 1px solid #2A2A2A;
-            display: flex; align-items: center; justify-content: space-between;
-        }
+        .ai-modal-box { max-width: 700px; margin: 40px auto; background: #141414; border: 1px solid #2A2A2A; border-radius: 24px; overflow: hidden; }
+        .ai-modal-header { padding: 24px 28px; border-bottom: 1px solid #2A2A2A; display: flex; align-items: center; justify-content: space-between; }
         .ai-modal-logo { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; }
         .ai-modal-logo span { color: #FF6B35; }
         .ai-modal-close { color: #6B6B6B; font-size: 24px; cursor: pointer; background: none; border: none; line-height: 1; padding: 4px; }
         .ai-modal-body { padding: 28px; }
-
         .style-btn { padding: 8px 16px; border: 1px solid #2A2A2A; border-radius: 100px; color: #6B6B6B; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s ease; background: transparent; font-family: 'Inter', sans-serif; }
         .style-btn:hover { border-color: #E8D5B7; color: #E8D5B7; }
         .style-btn.active-style { background: #E8D5B7; color: #0A0A0A; border-color: #E8D5B7; font-weight: 700; }
-
-        .modal-upload-zone {
-            border: 2px dashed #2A2A2A; border-radius: 16px; padding: 48px 24px;
-            text-align: center; cursor: pointer; transition: all 0.3s ease;
-            background: #0A0A0A; position: relative;
-        }
+        .modal-upload-zone { border: 2px dashed #2A2A2A; border-radius: 16px; padding: 48px 24px; text-align: center; cursor: pointer; transition: all 0.3s ease; background: #0A0A0A; position: relative; }
         .modal-upload-zone:hover { border-color: #FF6B35; background: rgba(255,107,53,.03); }
         .modal-upload-zone.dragover { border-color: #FF6B35; background: rgba(255,107,53,.05); }
-
-        .modal-analyze-btn {
-            width: 100%; margin-top: 20px; padding: 16px;
-            background: #E8D5B7; color: #0A0A0A; border: none;
-            border-radius: 12px; font-size: 16px; font-weight: 700;
-            cursor: pointer; transition: all 0.3s ease;
-            font-family: 'Inter', sans-serif;
-            opacity: 0.4; pointer-events: none;
-        }
+        .modal-analyze-btn { width: 100%; margin-top: 20px; padding: 16px; background: #E8D5B7; color: #0A0A0A; border: none; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.3s ease; font-family: 'Inter', sans-serif; opacity: 0.4; pointer-events: none; }
         .modal-analyze-btn.ready { opacity: 1; pointer-events: auto; }
         .modal-analyze-btn:hover { background: #fff; transform: translateY(-1px); }
-
-        .loading-check {
-            display: flex; align-items: center; gap: 10px;
-            font-size: 14px; color: #6B6B6B; padding: 7px 0;
-            transition: all 0.4s ease; font-family: 'JetBrains Mono', monospace;
-        }
+        .loading-check { display: flex; align-items: center; gap: 10px; font-size: 14px; color: #6B6B6B; padding: 7px 0; transition: all 0.4s ease; font-family: 'JetBrains Mono', monospace; }
         .loading-check.done { color: #30D158; opacity: 1 !important; }
-
-        .result-issue {
-            display: flex; align-items: flex-start; gap: 10px;
-            padding: 10px 0; border-bottom: 1px solid #1E1E1E;
-            font-size: 14px; line-height: 1.5;
-        }
+        .result-issue { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid #1E1E1E; font-size: 14px; line-height: 1.5; }
         .result-issue:last-child { border-bottom: none; padding-bottom: 0; }
-        .result-fix {
-            display: flex; align-items: flex-start; gap: 10px;
-            padding: 10px 0; border-bottom: 1px solid #1E1E1E;
-            font-size: 14px; line-height: 1.5;
-        }
+        .result-fix { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid #1E1E1E; font-size: 14px; line-height: 1.5; }
         .result-fix:last-child { border-bottom: none; padding-bottom: 0; }
-
-        .modal-share-btn {
-            flex: 1; padding: 14px; background: #E8D5B7; color: #0A0A0A;
-            border: none; border-radius: 12px; font-size: 15px; font-weight: 700;
-            cursor: pointer; font-family: 'Inter', sans-serif; min-width: 140px;
-            transition: all 0.2s ease;
-        }
+        .modal-share-btn { flex: 1; padding: 14px; background: #E8D5B7; color: #0A0A0A; border: none; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; min-width: 140px; transition: all 0.2s ease; }
         .modal-share-btn:hover { background: #fff; }
-        .modal-reset-btn {
-            flex: 1; padding: 14px; background: transparent; color: #E8D5B7;
-            border: 1px solid #2A2A2A; border-radius: 12px; font-size: 15px;
-            font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif;
-            min-width: 140px; transition: all 0.2s ease;
-        }
+        .modal-reset-btn { flex: 1; padding: 14px; background: transparent; color: #E8D5B7; border: 1px solid #2A2A2A; border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; min-width: 140px; transition: all 0.2s ease; }
         .modal-reset-btn:hover { border-color: #E8D5B7; }
+        .model-indicator { font-size: 11px; color: var(--secondary); font-family: var(--font-mono); text-align: center; margin-top: 8px; letter-spacing: 1px; }
 
         /* RESPONSIVE */
         @media (max-width: 1024px) {
@@ -450,7 +365,7 @@
     <a href="#styles" onclick="closeMobileMenu()">Styles</a>
     <a href="#pricing" onclick="closeMobileMenu()">Pricing</a>
     <a href="#faq" onclick="closeMobileMenu()">FAQ</a>
-    <a href="#" onclick="closeMobileMenu(); openModal();" style="color:var(--accent);">Roast My Room 🔥</a>
+    <a href="#" onclick="closeMobileMenu(); openModal();" style="color:var(--accent)">Roast My Room 🔥</a>
 </div>
 
 <!-- HERO -->
@@ -498,8 +413,8 @@
 </div>
 
 <!-- UPLOAD SECTION -->
-<section style="padding:120px 24px; text-align:center;" id="upload">
-    <div style="max-width:700px; margin:0 auto;">
+<section style="padding:120px 24px;text-align:center" id="upload">
+    <div style="max-width:700px;margin:0 auto">
         <div class="section-label reveal">Try It Now</div>
         <h2 class="section-title reveal reveal-delay-1">How expensive does<br>your room look?</h2>
         <p class="section-subtitle reveal reveal-delay-2">Drop a photo and find out in 10 seconds.</p>
@@ -508,37 +423,29 @@
             <div class="upload-title">Drop your room here</div>
             <div class="upload-subtitle">or tap to upload from your phone</div>
             <div class="upload-formats">
-                <span class="upload-format">JPG</span>
-                <span class="upload-format">PNG</span>
-                <span class="upload-format">HEIC</span>
-                <span class="upload-format">WEBP</span>
+                <span class="upload-format">JPG</span><span class="upload-format">PNG</span>
+                <span class="upload-format">HEIC</span><span class="upload-format">WEBP</span>
             </div>
         </div>
         <div class="store-badges reveal reveal-delay-4">
-            <a href="#" class="store-badge">
-                <div class="store-badge-icon">🍎</div>
-                <div><div class="store-badge-text-top">Download on the</div><div class="store-badge-text-bottom">App Store</div></div>
-            </a>
-            <a href="#" class="store-badge">
-                <div class="store-badge-icon">▶</div>
-                <div><div class="store-badge-text-top">Get it on</div><div class="store-badge-text-bottom">Google Play</div></div>
-            </a>
+            <a href="#" class="store-badge"><div class="store-badge-icon">🍎</div><div><div class="store-badge-text-top">Download on the</div><div class="store-badge-text-bottom">App Store</div></div></a>
+            <a href="#" class="store-badge"><div class="store-badge-icon">▶</div><div><div class="store-badge-text-top">Get it on</div><div class="store-badge-text-bottom">Google Play</div></div></a>
         </div>
     </div>
 </section>
 
 <!-- ROAST EXAMPLES -->
-<section style="padding:0 24px 120px; text-align:center;">
-    <div style="max-width:1100px; margin:0 auto;">
+<section style="padding:0 24px 120px;text-align:center">
+    <div style="max-width:1100px;margin:0 auto">
         <div class="section-label reveal">Real Roasts</div>
         <h2 class="section-title reveal reveal-delay-1">The AI doesn't hold back.</h2>
         <p class="section-subtitle reveal reveal-delay-2">Real results from real rooms. Results may sting.</p>
-        <div class="roast-demo reveal reveal-delay-3" style="margin:64px auto 0;">
+        <div class="roast-demo reveal reveal-delay-3" style="margin:64px auto 0">
             <div class="roast-card">
                 <div class="roast-card-image">
-                    <div class="room-mock room-mock-before" style="width:100%; position:relative;">
+                    <div class="room-mock room-mock-before" style="width:100%;position:relative">
                         <div class="room-elements"><div class="room-sofa-before"></div><div class="room-lamp-before"></div></div>
-                        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:48px;opacity:.3;">🛋️</div>
+                        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:48px;opacity:.3">🛋️</div>
                     </div>
                     <div class="score-badge bad">3.2</div>
                 </div>
@@ -555,9 +462,9 @@
             </div>
             <div class="roast-card">
                 <div class="roast-card-image">
-                    <div class="room-mock room-mock-after" style="width:100%; position:relative;">
-                        <div class="room-elements"><div class="room-sofa-after"></div><span style="font-size:32px;">🪴</span></div>
-                        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:48px;opacity:.3;">✨</div>
+                    <div class="room-mock room-mock-after" style="width:100%;position:relative">
+                        <div class="room-elements"><div class="room-sofa-after"></div><span style="font-size:32px">🪴</span></div>
+                        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:48px;opacity:.3">✨</div>
                     </div>
                     <div class="score-badge good">8.4</div>
                 </div>
@@ -596,7 +503,7 @@
         <div>
             <div class="section-label reveal">Score System</div>
             <h2 class="section-title reveal reveal-delay-1">Where does<br>your room land?</h2>
-            <p style="color:var(--secondary);max-width:400px;margin-top:16px;font-size:16px;line-height:1.7;" class="reveal reveal-delay-2">The AI scores 0–10 based on lighting, layout, furniture, color palette, and overall vibe.</p>
+            <p style="color:var(--secondary);max-width:400px;margin-top:16px;font-size:16px;line-height:1.7" class="reveal reveal-delay-2">The AI scores 0–10 based on lighting, layout, furniture, color palette, and overall vibe.</p>
             <div class="scores-list">
                 <div class="score-row reveal reveal-delay-1"><span class="score-range" style="color:#FF3B30">0–2</span><div><div class="score-title-name">Design Disaster</div><div class="score-title-sub">We need to talk. Urgently.</div></div><span class="score-emoji">🚨</span></div>
                 <div class="score-row reveal reveal-delay-2"><span class="score-range" style="color:#FF9500">2–4</span><div><div class="score-title-name">Struggling But Trying</div><div class="score-title-sub">The intention is there. The execution isn't.</div></div><span class="score-emoji">😬</span></div>
@@ -614,17 +521,17 @@
                 <div class="score-number-display">
                     <div class="score-big-num" style="color:#FFD60A">5.1</div>
                     <div class="score-big-den">/ 10</div>
-                    <div style="font-size:12px;color:var(--secondary);margin-top:4px;">avg score</div>
+                    <div style="font-size:12px;color:var(--secondary);margin-top:4px">avg score</div>
                 </div>
             </div>
-            <div style="text-align:center;">
+            <div style="text-align:center">
                 <div style="font-size:22px;font-weight:700;font-family:var(--font-display)">Has Potential</div>
-                <div style="color:var(--secondary);font-size:14px;margin-top:4px;">Most rooms score between 4–7</div>
+                <div style="color:var(--secondary);font-size:14px;margin-top:4px">Most rooms score between 4–7</div>
             </div>
-            <div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:20px 28px;text-align:center;">
-                <div style="font-size:13px;color:var(--secondary);margin-bottom:8px;">Most common roast</div>
-                <div style="font-size:15px;font-style:italic;">"The overhead light is doing your room absolutely no favors."</div>
-                <div style="margin-top:8px;font-family:var(--font-mono);font-size:11px;color:var(--accent);">said to 68% of rooms</div>
+            <div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:20px 28px;text-align:center">
+                <div style="font-size:13px;color:var(--secondary);margin-bottom:8px">Most common roast</div>
+                <div style="font-size:15px;font-style:italic">"The overhead light is doing your room absolutely no favors."</div>
+                <div style="margin-top:8px;font-family:var(--font-mono);font-size:11px;color:var(--accent)">said to 68% of rooms</div>
             </div>
         </div>
     </div>
@@ -636,8 +543,8 @@
         <div class="reveal">
             <div class="section-label">Smart Fixes</div>
             <h2 class="section-title" style="max-width:400px">Budget fixes that actually work.</h2>
-            <p style="color:var(--secondary);max-width:400px;margin-top:16px;font-size:16px;line-height:1.7;">AI doesn't just roast you and leave. It gives you a prioritised list of changes ranked by impact and sorted by budget.</p>
-            <div style="margin-top:32px;display:flex;gap:16px;flex-wrap:wrap;">
+            <p style="color:var(--secondary);max-width:400px;margin-top:16px;font-size:16px;line-height:1.7">AI doesn't just roast you and leave. It gives you a prioritised list of changes ranked by impact and sorted by budget.</p>
+            <div style="margin-top:32px;display:flex;gap:16px;flex-wrap:wrap">
                 <div style="display:flex;align-items:center;gap:8px;font-size:14px;color:var(--secondary)"><span style="color:var(--score-green)">●</span> Free fixes</div>
                 <div style="display:flex;align-items:center;gap:8px;font-size:14px;color:var(--secondary)"><span style="color:var(--score-yellow)">●</span> Under $50</div>
                 <div style="display:flex;align-items:center;gap:8px;font-size:14px;color:var(--secondary)"><span style="color:var(--accent)">●</span> Under $200</div>
@@ -650,31 +557,11 @@
                 <button class="budget-tab" onclick="switchBudget(this,'200')">Under $200</button>
             </div>
             <div class="fixes-list" id="fixesList">
-                <div class="fix-card" data-budget="free">
-                    <div class="fix-card-header"><div class="fix-icon">💡</div><div class="fix-card-title">Move your lamp to a corner</div><div class="fix-card-budget">FREE</div></div>
-                    <div class="fix-card-desc">Turn off the overhead. Put a floor lamp in the corner. Instantly 2x cozier.</div>
-                    <div class="fix-indicators"><div class="fix-indicator">Effort<div class="fix-dots"><div class="fix-dot active"></div><div class="fix-dot"></div><div class="fix-dot"></div></div></div><div class="fix-indicator">Impact<div class="fix-dots"><div class="fix-dot active"></div><div class="fix-dot active"></div><div class="fix-dot active"></div></div></div></div>
-                </div>
-                <div class="fix-card" data-budget="free">
-                    <div class="fix-card-header"><div class="fix-icon">🪴</div><div class="fix-card-title">Add one plant</div><div class="fix-card-budget">FREE*</div></div>
-                    <div class="fix-card-desc">Snake plant. Peace lily. Pothos. Organic matter transforms sterile into warm.</div>
-                    <div class="fix-indicators"><div class="fix-indicator">Effort<div class="fix-dots"><div class="fix-dot active"></div><div class="fix-dot"></div><div class="fix-dot"></div></div></div><div class="fix-indicator">Impact<div class="fix-dots"><div class="fix-dot active"></div><div class="fix-dot active"></div><div class="fix-dot"></div></div></div></div>
-                </div>
-                <div class="fix-card" data-budget="50" style="display:none">
-                    <div class="fix-card-header"><div class="fix-icon">🕯️</div><div class="fix-card-title">Candles on a tray</div><div class="fix-card-budget">$15–25</div></div>
-                    <div class="fix-card-desc">3 candles different heights. Wooden or marble tray. A $200 aesthetic for $20.</div>
-                    <div class="fix-indicators"><div class="fix-indicator">Effort<div class="fix-dots"><div class="fix-dot active"></div><div class="fix-dot"></div><div class="fix-dot"></div></div></div><div class="fix-indicator">Impact<div class="fix-dots"><div class="fix-dot active"></div><div class="fix-dot active"></div><div class="fix-dot"></div></div></div></div>
-                </div>
-                <div class="fix-card" data-budget="50" style="display:none">
-                    <div class="fix-card-header"><div class="fix-icon">🖼️</div><div class="fix-card-title">Poster + frame from IKEA</div><div class="fix-card-budget">$20–40</div></div>
-                    <div class="fix-card-desc">One large print, properly framed, properly hung at eye level. Not three small random frames.</div>
-                    <div class="fix-indicators"><div class="fix-indicator">Effort<div class="fix-dots"><div class="fix-dot active"></div><div class="fix-dot active"></div><div class="fix-dot"></div></div></div><div class="fix-indicator">Impact<div class="fix-dots"><div class="fix-dot active"></div><div class="fix-dot active"></div><div class="fix-dot active"></div></div></div></div>
-                </div>
-                <div class="fix-card" data-budget="200" style="display:none">
-                    <div class="fix-card-header"><div class="fix-icon">🪟</div><div class="fix-card-title">Floor-to-ceiling curtains</div><div class="fix-card-budget">$60–150</div></div>
-                    <div class="fix-card-desc">Hang them from ceiling to floor. The room looks 40% taller. Non-negotiable.</div>
-                    <div class="fix-indicators"><div class="fix-indicator">Effort<div class="fix-dots"><div class="fix-dot active"></div><div class="fix-dot active"></div><div class="fix-dot"></div></div></div><div class="fix-indicator">Impact<div class="fix-dots"><div class="fix-dot active"></div><div class="fix-dot active"></div><div class="fix-dot active"></div></div></div></div>
-                </div>
+                <div class="fix-card" data-budget="free"><div class="fix-card-header"><div class="fix-icon">💡</div><div class="fix-card-title">Move your lamp to a corner</div><div class="fix-card-budget">FREE</div></div><div class="fix-card-desc">Turn off the overhead. Put a floor lamp in the corner. Instantly 2x cozier.</div><div class="fix-indicators"><div class="fix-indicator">Effort<div class="fix-dots"><div class="fix-dot active"></div><div class="fix-dot"></div><div class="fix-dot"></div></div></div><div class="fix-indicator">Impact<div class="fix-dots"><div class="fix-dot active"></div><div class="fix-dot active"></div><div class="fix-dot active"></div></div></div></div></div>
+                <div class="fix-card" data-budget="free"><div class="fix-card-header"><div class="fix-icon">🪴</div><div class="fix-card-title">Add one plant</div><div class="fix-card-budget">FREE*</div></div><div class="fix-card-desc">Snake plant. Peace lily. Pothos. Organic matter transforms sterile into warm.</div><div class="fix-indicators"><div class="fix-indicator">Effort<div class="fix-dots"><div class="fix-dot active"></div><div class="fix-dot"></div><div class="fix-dot"></div></div></div><div class="fix-indicator">Impact<div class="fix-dots"><div class="fix-dot active"></div><div class="fix-dot active"></div><div class="fix-dot"></div></div></div></div></div>
+                <div class="fix-card" data-budget="50" style="display:none"><div class="fix-card-header"><div class="fix-icon">🕯️</div><div class="fix-card-title">Candles on a tray</div><div class="fix-card-budget">$15–25</div></div><div class="fix-card-desc">3 candles different heights. Wooden or marble tray. A $200 aesthetic for $20.</div><div class="fix-indicators"><div class="fix-indicator">Effort<div class="fix-dots"><div class="fix-dot active"></div><div class="fix-dot"></div><div class="fix-dot"></div></div></div><div class="fix-indicator">Impact<div class="fix-dots"><div class="fix-dot active"></div><div class="fix-dot active"></div><div class="fix-dot"></div></div></div></div></div>
+                <div class="fix-card" data-budget="50" style="display:none"><div class="fix-card-header"><div class="fix-icon">🖼️</div><div class="fix-card-title">Poster + frame from IKEA</div><div class="fix-card-budget">$20–40</div></div><div class="fix-card-desc">One large print, properly framed, properly hung at eye level.</div><div class="fix-indicators"><div class="fix-indicator">Effort<div class="fix-dots"><div class="fix-dot active"></div><div class="fix-dot active"></div><div class="fix-dot"></div></div></div><div class="fix-indicator">Impact<div class="fix-dots"><div class="fix-dot active"></div><div class="fix-dot active"></div><div class="fix-dot active"></div></div></div></div></div>
+                <div class="fix-card" data-budget="200" style="display:none"><div class="fix-card-header"><div class="fix-icon">🪟</div><div class="fix-card-title">Floor-to-ceiling curtains</div><div class="fix-card-budget">$60–150</div></div><div class="fix-card-desc">Hang them from ceiling to floor. The room looks 40% taller. Non-negotiable.</div><div class="fix-indicators"><div class="fix-indicator">Effort<div class="fix-dots"><div class="fix-dot active"></div><div class="fix-dot active"></div><div class="fix-dot"></div></div></div><div class="fix-indicator">Impact<div class="fix-dots"><div class="fix-dot active"></div><div class="fix-dot active"></div><div class="fix-dot active"></div></div></div></div></div>
             </div>
         </div>
     </div>
@@ -726,9 +613,9 @@
             <div class="tweet-card"><div class="tweet-header"><div class="tweet-avatar">🦋</div><div><div class="tweet-name">Maya Chen</div><div class="tweet-handle">@mayachen_design</div></div><div class="tweet-x">𝕏</div></div><div class="tweet-text">AI roasted my bedroom and said the curtains were <span class="tweet-highlight">"shorter than my ambition"</span> and honestly?? That's fair. 💀</div><div class="tweet-meta"><span>❤️ 4.2K</span><span>🔁 891</span></div></div>
             <div class="tweet-card"><div class="tweet-header"><div class="tweet-avatar">🏠</div><div><div class="tweet-name">Alex Petrov</div><div class="tweet-handle">@alexpetrov_</div></div><div class="tweet-x">𝕏</div></div><div class="tweet-text">Room Roast gave my apartment a <span class="tweet-highlight">2.1/10</span> and called it "a crime scene with WiFi." I'm not okay but I've already bought three lamps.</div><div class="tweet-meta"><span>❤️ 11.8K</span><span>🔁 2.3K</span></div></div>
             <div class="tweet-card"><div class="tweet-header"><div class="tweet-avatar">✨</div><div><div class="tweet-name">Sarah Kim</div><div class="tweet-handle">@sarahkim_home</div></div><div class="tweet-x">𝕏</div></div><div class="tweet-text">Followed all the free fixes from Room Roast. <span class="tweet-highlight">Score went from 4 to 7.5.</span> This app is actually insane.</div><div class="tweet-meta"><span>❤️ 8.9K</span><span>🔁 1.7K</span></div></div>
-            <div class="tweet-card"><div class="tweet-header"><div class="tweet-avatar">🎨</div><div><div class="tweet-name">Tom Walsh</div><div class="tweet-handle">@tomwalsh_nyc</div></div><div class="tweet-x">𝕏</div></div><div class="tweet-text">The AI said my living room has <span class="tweet-highlight">"the energy of someone who gave up."</span> Sir. SIR. I did not come here to be perceived like this.</div><div class="tweet-meta"><span>❤️ 22.1K</span><span>🔁 5.4K</span></div></div>
+            <div class="tweet-card"><div class="tweet-header"><div class="tweet-avatar">🎨</div><div><div class="tweet-name">Tom Walsh</div><div class="tweet-handle">@tomwalsh_nyc</div></div><div class="tweet-x">𝕏</div></div><div class="tweet-text">The AI said my living room has <span class="tweet-highlight">"the energy of someone who gave up."</span> Sir. SIR.</div><div class="tweet-meta"><span>❤️ 22.1K</span><span>🔁 5.4K</span></div></div>
             <div class="tweet-card"><div class="tweet-header"><div class="tweet-avatar">🌿</div><div><div class="tweet-name">Julia Morris</div><div class="tweet-handle">@juliamorris</div></div><div class="tweet-x">𝕏</div></div><div class="tweet-text">Got a 9.2/10 from Room Roast and I screenshot it and sent it to my entire family. <span class="tweet-highlight">I am thriving.</span></div><div class="tweet-meta"><span>❤️ 6.3K</span><span>🔁 942</span></div></div>
-            <div class="tweet-card"><div class="tweet-header"><div class="tweet-avatar">🔥</div><div><div class="tweet-name">Dev Patel</div><div class="tweet-handle">@devpatel_builds</div></div><div class="tweet-x">𝕏</div></div><div class="tweet-text">Room Roast is the best app I've seen in years. <span class="tweet-highlight">The Luxury redesign of my bedroom made me gasp.</span> Genuinely.</div><div class="tweet-meta"><span>❤️ 3.8K</span><span>🔁 612</span></div></div>
+            <div class="tweet-card"><div class="tweet-header"><div class="tweet-avatar">🔥</div><div><div class="tweet-name">Dev Patel</div><div class="tweet-handle">@devpatel_builds</div></div><div class="tweet-x">𝕏</div></div><div class="tweet-text">Room Roast is the best app I've seen in years. <span class="tweet-highlight">The Luxury redesign made me gasp.</span> Genuinely.</div><div class="tweet-meta"><span>❤️ 3.8K</span><span>🔁 612</span></div></div>
         </div>
     </div>
 </section>
@@ -796,11 +683,11 @@
         <h2 class="section-title reveal reveal-delay-1">Questions we get roasted with.</h2>
     </div>
     <div class="faq-list">
-        <div class="faq-item reveal"><div class="faq-question" onclick="toggleFaq(this)">Is the roast actually honest or just nice?<div class="faq-icon">+</div></div><div class="faq-answer"><div class="faq-answer-inner">Brutally honest, but not cruel. The AI is trained to be like a very direct friend who actually knows design — it will tell you the overhead lighting is destroying your vibe without making you feel bad about yourself.</div></div></div>
-        <div class="faq-item reveal reveal-delay-1"><div class="faq-question" onclick="toggleFaq(this)">What kind of photos work best?<div class="faq-icon">+</div></div><div class="faq-answer"><div class="faq-answer-inner">Wide shots that show most of the room work best. Natural lighting helps but isn't required. Any photo from your phone works. The messier the room, the more interesting the roast.</div></div></div>
-        <div class="faq-item reveal reveal-delay-2"><div class="faq-question" onclick="toggleFaq(this)">Are my photos stored or used for training?<div class="faq-icon">+</div></div><div class="faq-answer"><div class="faq-answer-inner">Your photos are processed securely and only stored in your personal history. They are never used to train AI models, never shared publicly without your explicit consent, and you can delete them anytime.</div></div></div>
-        <div class="faq-item reveal reveal-delay-3"><div class="faq-question" onclick="toggleFaq(this)">How does the AI redesign actually work?<div class="faq-icon">+</div></div><div class="faq-answer"><div class="faq-answer-inner">After analysing your room, the AI generates a reimagined version using your actual space as a base — same layout, same window positions, but with the style applied. It's not a random template.</div></div></div>
-        <div class="faq-item reveal reveal-delay-4"><div class="faq-question" onclick="toggleFaq(this)">Can I roast rooms that aren't mine?<div class="faq-icon">+</div></div><div class="faq-answer"><div class="faq-answer-inner">Technically yes. People regularly roast their parents' living rooms, Airbnbs, or rooms from real estate listings. We take no responsibility for any family arguments that result.</div></div></div>
+        <div class="faq-item reveal"><div class="faq-question" onclick="toggleFaq(this)">Is the roast actually honest or just nice?<div class="faq-icon">+</div></div><div class="faq-answer"><div class="faq-answer-inner">Brutally honest, but not cruel. The AI tells you the overhead lighting is destroying your vibe without making you feel bad about yourself. The room is roasted, not the person.</div></div></div>
+        <div class="faq-item reveal reveal-delay-1"><div class="faq-question" onclick="toggleFaq(this)">What kind of photos work best?<div class="faq-icon">+</div></div><div class="faq-answer"><div class="faq-answer-inner">Wide shots that show most of the room work best. Any photo from your phone works. The messier the room, the more interesting the roast.</div></div></div>
+        <div class="faq-item reveal reveal-delay-2"><div class="faq-question" onclick="toggleFaq(this)">Are my photos stored or used for training?<div class="faq-icon">+</div></div><div class="faq-answer"><div class="faq-answer-inner">Your photos are processed securely. They are never used to train AI models and never shared publicly without your explicit consent.</div></div></div>
+        <div class="faq-item reveal reveal-delay-3"><div class="faq-question" onclick="toggleFaq(this)">How does the AI redesign actually work?<div class="faq-icon">+</div></div><div class="faq-answer"><div class="faq-answer-inner">After analysing your room, the AI generates a reimagined version using your actual space as a base — same layout, but with the style applied. It's not a random template.</div></div></div>
+        <div class="faq-item reveal reveal-delay-4"><div class="faq-question" onclick="toggleFaq(this)">Can I roast rooms that aren't mine?<div class="faq-icon">+</div></div><div class="faq-answer"><div class="faq-answer-inner">Technically yes. People regularly roast their parents' living rooms, Airbnbs, or rooms from real estate listings. We take no responsibility for family arguments that result.</div></div></div>
     </div>
 </section>
 
@@ -837,9 +724,7 @@
     </div>
 </footer>
 
-<!-- ============================================
-     AI MODAL
-============================================ -->
+<!-- AI MODAL -->
 <div class="ai-modal-overlay" id="aiModal">
     <div class="ai-modal-box">
         <div class="ai-modal-header">
@@ -848,14 +733,13 @@
         </div>
         <div class="ai-modal-body">
 
-            <!-- STEP: UPLOAD -->
+            <!-- UPLOAD -->
             <div id="stepUpload">
                 <div style="text-align:center;margin-bottom:24px">
                     <div style="font-size:11px;letter-spacing:2px;color:var(--accent);font-family:monospace;margin-bottom:8px">UPLOAD YOUR ROOM</div>
                     <div style="font-size:24px;font-weight:700;font-family:'Playfair Display',serif">Drop it. We'll judge it.</div>
                     <div style="color:var(--secondary);margin-top:8px;font-size:15px">AI analysis takes ~10 seconds</div>
                 </div>
-
                 <div class="modal-upload-zone" id="modalUploadZone" onclick="document.getElementById('fileInput').click()">
                     <input type="file" id="fileInput" accept="image/*" style="display:none" onchange="handleFile(event)">
                     <div id="uploadPlaceholder">
@@ -868,7 +752,6 @@
                         <div style="margin-top:12px;color:var(--secondary);font-size:13px">Tap to change photo</div>
                     </div>
                 </div>
-
                 <div style="margin-top:20px">
                     <div style="font-size:12px;color:var(--secondary);margin-bottom:10px;letter-spacing:1px;text-transform:uppercase;font-family:monospace">Roast Style</div>
                     <div style="display:flex;gap:8px;flex-wrap:wrap">
@@ -878,19 +761,16 @@
                         <button class="style-btn" data-style="gordon" onclick="selectStyle(this)">👨‍🍳 Gordon Mode</button>
                     </div>
                 </div>
-
                 <button class="modal-analyze-btn" id="analyzeBtn" onclick="analyzeRoom()">🔥 Roast My Room</button>
-
-                <div style="text-align:center;margin-top:16px;font-size:12px;color:var(--secondary)">
-                    Powered by Google Gemini AI · Your photo is never stored or shared
-                </div>
+                <div style="text-align:center;margin-top:12px;font-size:12px;color:var(--secondary)">Powered by Google Gemini AI · Your photo is never stored or shared</div>
             </div>
 
-            <!-- STEP: LOADING -->
+            <!-- LOADING -->
             <div id="stepLoading" style="display:none;text-align:center;padding:40px 20px">
                 <div style="font-size:64px;margin-bottom:24px;animation:spin 2s linear infinite;display:inline-block">🔍</div>
                 <div style="font-size:22px;font-weight:700;font-family:'Playfair Display',serif;margin-bottom:8px">AI is forming opinions...</div>
-                <div id="loadingText" style="color:var(--secondary);font-size:15px">Scanning for crimes against design...</div>
+                <div id="loadingText" style="color:var(--secondary);font-size:15px;min-height:24px">Scanning for crimes against design...</div>
+                <div id="modelIndicator" class="model-indicator" style="margin-top:8px"></div>
                 <div style="margin-top:32px;background:#0A0A0A;border-radius:12px;padding:20px;text-align:left">
                     <div class="loading-check" id="lc1" style="opacity:.3">○ &nbsp;Analyzing lighting quality</div>
                     <div class="loading-check" id="lc2" style="opacity:.3">○ &nbsp;Checking furniture arrangement</div>
@@ -900,46 +780,38 @@
                 </div>
             </div>
 
-            <!-- STEP: RESULTS -->
+            <!-- RESULTS -->
             <div id="stepResults" style="display:none">
-
                 <div id="resultImageWrap" style="width:100%;max-height:260px;border-radius:12px;overflow:hidden;margin-bottom:20px;position:relative">
                     <img id="resultImg" style="width:100%;max-height:260px;object-fit:cover;border-radius:12px">
                     <div id="scoreBadge" style="position:absolute;top:16px;right:16px;background:rgba(10,10,10,.9);backdrop-filter:blur(10px);border:1px solid #2A2A2A;border-radius:10px;padding:10px 16px;font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:700"></div>
                 </div>
-
                 <div style="text-align:center;margin-bottom:24px">
                     <div id="scoreTitle" style="font-family:'Playfair Display',serif;font-size:28px;font-weight:700"></div>
                     <div id="scoreSubtitle" style="color:var(--secondary);font-size:15px;margin-top:4px"></div>
                     <div id="starsRow" style="font-size:20px;margin-top:12px;letter-spacing:2px"></div>
                 </div>
-
                 <div style="background:#0A0A0A;border:1px solid #2A2A2A;border-radius:12px;padding:20px;margin-bottom:16px">
                     <div style="font-size:11px;letter-spacing:2px;color:#FF6B35;font-family:monospace;margin-bottom:10px">THE ROAST 🔥</div>
                     <div id="roastText" style="font-size:15px;line-height:1.8;font-style:italic"></div>
                 </div>
-
                 <div style="background:#0A0A0A;border:1px solid #2A2A2A;border-radius:12px;padding:20px;margin-bottom:16px">
                     <div style="font-size:11px;letter-spacing:2px;color:var(--secondary);font-family:monospace;margin-bottom:14px">ISSUES FOUND</div>
                     <div id="issuesList"></div>
                 </div>
-
                 <div style="background:#0A0A0A;border:1px solid #2A2A2A;border-radius:12px;padding:20px;margin-bottom:16px">
                     <div style="font-size:11px;letter-spacing:2px;color:#30D158;font-family:monospace;margin-bottom:14px">FREE FIXES 💡</div>
                     <div id="fixesList2"></div>
                 </div>
-
                 <div style="background:linear-gradient(135deg,#141414,#1a1400);border:1px solid rgba(212,175,55,.3);border-radius:12px;padding:20px;margin-bottom:24px">
                     <div style="font-size:11px;letter-spacing:2px;color:#D4AF37;font-family:monospace;margin-bottom:8px">STYLE DNA</div>
                     <div id="styleDna" style="font-size:15px;line-height:1.7"></div>
                 </div>
-
                 <div id="errorBlock" style="display:none;text-align:center;padding:20px">
                     <div style="font-size:48px;margin-bottom:16px">😅</div>
                     <div style="font-size:18px;font-weight:600;margin-bottom:8px">Couldn't analyze this photo</div>
                     <div id="errorMsg" style="color:var(--secondary);font-size:14px;margin-bottom:20px"></div>
                 </div>
-
                 <div style="display:flex;gap:12px;flex-wrap:wrap">
                     <button class="modal-share-btn" onclick="shareResults()">📤 Share Roast</button>
                     <button class="modal-reset-btn" onclick="resetModal()">🔄 Roast Another Room</button>
@@ -952,33 +824,39 @@
 
 <script>
     // ════════════════════════════════════════════
-    // ⬇️  ВСТАВЬ СВОЙ КЛЮЧ СЮДА (строка ниже)
+    // ⬇️  ВСТАВЬ СВОЙ КЛЮЧ СЮДА
     // ════════════════════════════════════════════
     const GEMINI_API_KEY = 'AIzaSyBDbX0f_Lioxxl7B3elLTaJW61jKI0Sxkc';
     // ════════════════════════════════════════════
 
-    // ДОЛЖНО БЫТЬ ТАК:
-    const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+    // Только те модели которые есть в твоём ключе
+    const MODELS = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-001'
+    ];
 
     let selectedFile = null;
     let selectedStyle = 'balanced';
     let currentResults = null;
 
-    // ── ROAST PROMPTS ──────────────────────────
     const PROMPTS = {
         balanced: `You are Room Roast, an honest and sharp interior design AI critic. You are direct, witty, and fair. You roast the room, never the person.`,
-        savage:   `You are Room Roast in SAVAGE MODE. You are brutally, ruthlessly honest about bad interior design. Like a design critic who has had enough. No sugarcoating. Zero mercy. Roast the room hard.`,
-        kind:     `You are Room Roast in KIND MODE. You are a warm, supportive interior design coach. You gently point out what could be better while celebrating what's good. Encouraging but still honest.`,
-        gordon:   `You are Room Roast in GORDON RAMSAY MODE. You react to this room EXACTLY like Gordon Ramsay reacts to bad food. Use his speech patterns. Get angry at design crimes. "This room is a DISASTER." "What is this CABLE doing here?!" Be dramatic and hilarious.`
+        savage:   `You are Room Roast in SAVAGE MODE. Brutally, ruthlessly honest about bad interior design. No sugarcoating. Zero mercy for design crimes.`,
+        kind:     `You are Room Roast in KIND MODE. A warm, supportive interior design coach. Gently point out what could be better while celebrating what works.`,
+        gordon:   `You are Room Roast in GORDON RAMSAY MODE. React to this room EXACTLY like Gordon Ramsay reacts to bad food. "This room is a DISASTER." "What is this CABLE doing here?!" Be dramatic and specific.`
     };
 
-   const SCHEMA = `
-You MUST respond with ONLY a valid JSON object. No markdown. No code blocks. No explanation. No text before or after. Just the raw JSON.
+    const SCHEMA = `
+You MUST respond with ONLY a valid JSON object. No markdown. No code blocks. No explanation. Just raw JSON.
 
-Example of exact format required:
-{"score":4.5,"score_title":"Has Potential","score_subtitle":"Some good choices buried under fixable mistakes","roast":"The overhead light is doing this room absolutely no favors. Combined with those short curtains and visible cables everywhere, this space is working against itself. The furniture bones are actually decent though.","issues":[{"icon":"💡","text":"Overhead lighting only - the number one vibe killer","severity":"critical"},{"icon":"🪟","text":"Curtains too short, hanging mid-window","severity":"critical"},{"icon":"🔌","text":"Cables visible along the floor","severity":"warning"},{"icon":"🪴","text":"No plants or organic elements","severity":"warning"},{"icon":"🎨","text":"No focal point or art on walls","severity":"minor"}],"fixes":[{"icon":"💡","text":"Move any lamp to the corner and turn off overhead light tonight","budget":"FREE"},{"icon":"🕯️","text":"Add 3 candles on a small tray for instant warmth","budget":"$15-25"},{"icon":"🪟","text":"Replace curtains with floor-to-ceiling panels","budget":"$40-80"}],"style_dna":"This room is attempting a neutral modern look but hasn't committed. With better lighting and a few intentional pieces it could reach a clean contemporary aesthetic.","potential_score":7.5}
+Required format:
+{"score":4.5,"score_title":"Has Potential","score_subtitle":"Some good choices buried under fixable mistakes","roast":"Be specific about what you actually SEE in the photo. Mention real items, colors, furniture you can observe.","issues":[{"icon":"💡","text":"specific issue you see","severity":"critical"},{"icon":"🪟","text":"specific issue","severity":"critical"},{"icon":"🔌","text":"specific issue","severity":"warning"},{"icon":"🪴","text":"specific issue","severity":"warning"},{"icon":"🎨","text":"specific issue","severity":"minor"}],"fixes":[{"icon":"💡","text":"specific free fix for THIS exact room","budget":"FREE"},{"icon":"🕯️","text":"specific fix","budget":"$15-30"},{"icon":"🪟","text":"specific fix","budget":"$40-80"}],"style_dna":"2 sentences about current aesthetic and potential","potential_score":7.5}
 
-Now analyze the room in the photo and return JSON in that exact format.`;
+Score guide: 0-2=Design Disaster, 2-4=Struggling But Trying, 4-6=Has Potential, 6-8=Actually Decent, 8-9=Living Well, 9-10=Architectural Digest Called
+
+IMPORTANT: Be specific. Mention actual things you see. Never write generic advice.`;
 
     const LOADING_TEXTS = [
         'Scanning for crimes against design...',
@@ -990,54 +868,50 @@ Now analyze the room in the photo and return JSON in that exact format.`;
         'Judging your curtain choices...'
     ];
 
+    function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
     // ── MODAL ──────────────────────────────────
     function openModal() {
         document.getElementById('aiModal').classList.add('open');
         document.body.style.overflow = 'hidden';
     }
-
     function closeModal() {
         document.getElementById('aiModal').classList.remove('open');
         document.body.style.overflow = '';
     }
-
     document.getElementById('aiModal').addEventListener('click', function(e) {
         if (e.target === this) closeModal();
     });
 
-    // ── STYLE SELECT ───────────────────────────
+    // ── STYLE ──────────────────────────────────
     function selectStyle(btn) {
         document.querySelectorAll('.style-btn').forEach(b => b.classList.remove('active-style'));
         btn.classList.add('active-style');
         selectedStyle = btn.dataset.style;
     }
 
-    // ── FILE HANDLING ──────────────────────────
+    // ── FILE ───────────────────────────────────
     function handleFile(e) {
         const file = e.target.files[0];
         if (!file) return;
         if (file.size > 10 * 1024 * 1024) { alert('Max file size is 10MB.'); return; }
         if (!file.type.startsWith('image/')) { alert('Please upload an image.'); return; }
-
         selectedFile = file;
         const reader = new FileReader();
         reader.onload = ev => {
             document.getElementById('previewImg').src = ev.target.result;
             document.getElementById('uploadPlaceholder').style.display = 'none';
             document.getElementById('uploadPreview').style.display = 'block';
-            const btn = document.getElementById('analyzeBtn');
-            btn.classList.add('ready');
+            document.getElementById('analyzeBtn').classList.add('ready');
         };
         reader.readAsDataURL(file);
     }
 
-    // Drag & drop on modal upload zone
     const muz = document.getElementById('modalUploadZone');
     muz.addEventListener('dragover', e => { e.preventDefault(); muz.classList.add('dragover'); });
     muz.addEventListener('dragleave', () => muz.classList.remove('dragover'));
     muz.addEventListener('drop', e => {
-        e.preventDefault();
-        muz.classList.remove('dragover');
+        e.preventDefault(); muz.classList.remove('dragover');
         const file = e.dataTransfer.files[0];
         if (file) handleFile({ target: { files: [file] } });
     });
@@ -1050,144 +924,117 @@ Now analyze the room in the photo and return JSON in that exact format.`;
             const el = document.getElementById('loadingText');
             if (el) el.textContent = LOADING_TEXTS[ti];
         }, 1800);
-
         let ci = 1;
         const checkTimer = setInterval(() => {
-            if (ci <= 5) {
-                const el = document.getElementById('lc' + ci);
-                if (el) el.classList.add('done');
-                ci++;
-            } else clearInterval(checkTimer);
-        }, 1400);
-
+            if (ci <= 5) { const el = document.getElementById('lc' + ci); if (el) el.classList.add('done'); ci++; }
+            else clearInterval(checkTimer);
+        }, 1600);
         return () => { clearInterval(textTimer); clearInterval(checkTimer); };
     }
 
-    // ── ANALYZE ────────────────────────────────
-async function analyzeRoom() {
-    if (!selectedFile) return;
-
-    showStep('loading');
-    const stopAnim = startLoadingAnim();
-
-    // Пробуем разные модели по очереди
-    const MODELS = [
-    'gemini-2.5-flash',
-    'gemini-2.5-pro',
-    'gemini-2.0-flash',
-    'gemini-2.0-flash-001'
-];
-    async function tryModel(modelName, retryCount = 0) {
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${GEMINI_API_KEY}`;
-
-        const b64 = await toBase64(selectedFile);
-
-        const body = {
-            contents: [{
-                parts: [
-                    { inline_data: { mime_type: selectedFile.type, data: b64 } },
-                    { text: `${PROMPTS[selectedStyle]}\n\nAnalyze the room in this photo. Look at lighting, furniture, colors, clutter, cables, decor, and overall vibe.\n\n${SCHEMA}` }
-                ]
-            }],
-            generationConfig: {
-                temperature: 0.4,
-                maxOutputTokens: 2000,
-                responseMimeType: "application/json"
-            }
-        };
-
-        const res = await fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(body)
+    function toBase64(file) {
+        return new Promise((res, rej) => {
+            const r = new FileReader();
+            r.onload = () => res(r.result.split(',')[1]);
+            r.onerror = rej;
+            r.readAsDataURL(file);
         });
-
-        const data = await res.json();
-
-        // Перегрузка сервера — повторяем через паузу
-        if (res.status === 503 || res.status === 429) {
-            const waitMsg = [
-                'Server busy, retrying...',
-                'Still trying...',
-                'Almost there...'
-            ];
-            const el = document.getElementById('loadingText');
-
-            if (retryCount < 3) {
-                if (el) el.textContent = waitMsg[retryCount] || 'Retrying...';
-                await sleep(3000 + retryCount * 2000); // 3с, 5с, 7с
-                return tryModel(modelName, retryCount + 1);
-            }
-            // После 3 попыток — следующая модель
-            throw new Error('NEXT_MODEL');
-        }
-
-        // Квота исчерпана — следующая модель
-        if (res.status === 403 || data.error?.message?.includes('quota')) {
-            throw new Error('NEXT_MODEL');
-        }
-
-        if (!res.ok) {
-            throw new Error(data.error?.message || `Error ${res.status}`);
-        }
-
-        const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
-
-        // Парсим JSON
-        let result;
-        try {
-            result = JSON.parse(text);
-        } catch {
-            const match = text.match(/\{[\s\S]*\}/);
-            if (!match) throw new Error('Could not parse response. Try again.');
-            result = JSON.parse(match[0]);
-        }
-
-        return result;
     }
 
-    // Перебираем модели
-    let lastError = '';
-    for (const model of MODELS) {
-        try {
-            console.log(`🔄 Trying: ${model}`);
-            const el = document.getElementById('loadingText');
-            if (el) el.textContent = `Analyzing with ${model}...`;
+    // ── ANALYZE — с авто-перебором моделей ────
+    async function analyzeRoom() {
+        if (!selectedFile) return;
+        showStep('loading');
+        const stopAnim = startLoadingAnim();
 
-            const result = await tryModel(model);
-            stopAnim();
-            currentResults = result;
-            renderResults(result);
-            console.log(`✅ Success with: ${model}`);
-            return;
+        async function tryModel(modelName, attempt = 0) {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${GEMINI_API_KEY}`;
+            const indEl = document.getElementById('modelIndicator');
+            if (indEl) indEl.textContent = `trying ${modelName}...`;
 
-        } catch (err) {
-            if (err.message === 'NEXT_MODEL') {
-                console.warn(`⏭ ${model} busy, trying next...`);
-                lastError = 'Models are busy right now';
-                continue;
+            const b64 = await toBase64(selectedFile);
+            const body = {
+                contents: [{
+                    parts: [
+                        { inline_data: { mime_type: selectedFile.type, data: b64 } },
+                        { text: `${PROMPTS[selectedStyle]}\n\nAnalyze the room in this photo carefully. Look at lighting, furniture, colors, clutter, cables, decor, and overall vibe.\n\n${SCHEMA}` }
+                    ]
+                }],
+                generationConfig: {
+                    temperature: 0.4,
+                    maxOutputTokens: 2000,
+                    responseMimeType: "application/json"
+                }
+            };
+
+            const res = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+            });
+
+            const data = await res.json();
+
+            // Перегрузка — ждём и повторяем
+            if (res.status === 503 || res.status === 429) {
+                if (attempt < 2) {
+                    const waitSec = [4, 7, 10][attempt];
+                    const ltEl = document.getElementById('loadingText');
+                    if (ltEl) ltEl.textContent = `Server busy, retrying in ${waitSec}s...`;
+                    await sleep(waitSec * 1000);
+                    return tryModel(modelName, attempt + 1);
+                }
+                throw new Error('NEXT_MODEL');
             }
-            // Реальная ошибка — показываем
-            stopAnim();
-            renderError(err.message);
-            return;
+
+            // Квота исчерпана — следующая модель
+            if (res.status === 403 || (data.error?.message || '').toLowerCase().includes('quota')) {
+                throw new Error('NEXT_MODEL');
+            }
+
+            if (!res.ok) throw new Error(data.error?.message || `Error ${res.status}`);
+
+            const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+            let result;
+            try {
+                result = JSON.parse(text);
+            } catch {
+                const match = text.match(/\{[\s\S]*\}/);
+                if (!match) throw new Error('Could not parse AI response. Try again.');
+                result = JSON.parse(match[0]);
+            }
+            return result;
         }
+
+        let lastError = 'Unknown error';
+        for (const model of MODELS) {
+            try {
+                console.log(`🔄 Trying: ${model}`);
+                const result = await tryModel(model);
+                stopAnim();
+                currentResults = result;
+                renderResults(result);
+                console.log(`✅ Success: ${model}`);
+                return;
+            } catch (err) {
+                if (err.message === 'NEXT_MODEL') {
+                    console.warn(`⏭ ${model} unavailable, trying next...`);
+                    lastError = `${model} is busy`;
+                    continue;
+                }
+                stopAnim();
+                renderError(err.message);
+                return;
+            }
+        }
+
+        stopAnim();
+        renderError('All AI models are busy right now. Please wait 1–2 minutes and try again.');
     }
-
-    // Все модели недоступны
-    stopAnim();
-    renderError(`All models are busy right now. Please wait 1-2 minutes and try again. Google's servers are overloaded.`);
-}
-
-// Вспомогательная функция паузы
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
 
     // ── RENDER RESULTS ─────────────────────────
     function renderResults(d) {
         showStep('results');
-
         document.getElementById('resultImg').src = document.getElementById('previewImg').src;
 
         const score = parseFloat(d.score) || 0;
@@ -1212,7 +1059,7 @@ function sleep(ms) {
 
         const roastEl = document.getElementById('roastText');
         roastEl.textContent = '';
-        typeWrite(roastEl, d.roast || 'No roast generated.', 22);
+        typeWrite(roastEl, d.roast || 'No roast generated.', 20);
 
         const issuesEl = document.getElementById('issuesList');
         issuesEl.innerHTML = '';
@@ -1220,7 +1067,7 @@ function sleep(ms) {
             const sev = { critical: '#FF3B30', warning: '#FFD60A', minor: '#6B6B6B' }[i.severity] || '#6B6B6B';
             const div = document.createElement('div');
             div.className = 'result-issue';
-            div.innerHTML = `<span style="font-size:18px;flex-shrink:0">${i.icon || '⚠️'}</span><span style="flex:1;color:#E8D5B7">${i.text}</span><span style="font-size:10px;padding:2px 8px;border-radius:100px;color:${sev};background:${sev}18;white-space:nowrap;font-family:monospace">${(i.severity||'minor').toUpperCase()}</span>`;
+            div.innerHTML = `<span style="font-size:18px;flex-shrink:0">${i.icon||'⚠️'}</span><span style="flex:1;color:#E8D5B7">${i.text}</span><span style="font-size:10px;padding:2px 8px;border-radius:100px;color:${sev};background:${sev}18;white-space:nowrap;font-family:monospace">${(i.severity||'minor').toUpperCase()}</span>`;
             issuesEl.appendChild(div);
         });
 
@@ -1229,12 +1076,12 @@ function sleep(ms) {
         (d.fixes || []).forEach(f => {
             const div = document.createElement('div');
             div.className = 'result-fix';
-            div.innerHTML = `<span style="font-size:18px;flex-shrink:0">${f.icon || '💡'}</span><span style="flex:1;color:#E8D5B7">${f.text}</span><span style="font-size:11px;padding:3px 10px;border-radius:100px;color:#30D158;background:#30D15818;white-space:nowrap;font-family:monospace">${f.budget || 'FREE'}</span>`;
+            div.innerHTML = `<span style="font-size:18px;flex-shrink:0">${f.icon||'💡'}</span><span style="flex:1;color:#E8D5B7">${f.text}</span><span style="font-size:11px;padding:3px 10px;border-radius:100px;color:#30D158;background:#30D15818;white-space:nowrap;font-family:monospace">${f.budget||'FREE'}</span>`;
             fixesEl.appendChild(div);
         });
 
         const dnaEl = document.getElementById('styleDna');
-        dnaEl.innerHTML = `<span style="color:#E8D5B7">${d.style_dna || ''}</span>`;
+        dnaEl.innerHTML = `<span style="color:#E8D5B7">${d.style_dna||''}</span>`;
         if (d.potential_score) {
             dnaEl.innerHTML += `<div style="margin-top:12px;font-family:monospace;font-size:12px;color:#D4AF37">POTENTIAL: ${d.potential_score}/10 with improvements</div>`;
         }
@@ -1250,28 +1097,15 @@ function sleep(ms) {
         document.getElementById('errorMsg').textContent = msg;
     }
 
-    // ── HELPERS ────────────────────────────────
     function showStep(step) {
         document.getElementById('stepUpload').style.display  = step === 'upload'  ? 'block' : 'none';
         document.getElementById('stepLoading').style.display = step === 'loading' ? 'block' : 'none';
         document.getElementById('stepResults').style.display = step === 'results' ? 'block' : 'none';
     }
 
-    function toBase64(file) {
-        return new Promise((res, rej) => {
-            const r = new FileReader();
-            r.onload = () => res(r.result.split(',')[1]);
-            r.onerror = rej;
-            r.readAsDataURL(file);
-        });
-    }
-
     function typeWrite(el, text, speed) {
         let i = 0;
-        const t = setInterval(() => {
-            if (i < text.length) { el.textContent += text[i++]; }
-            else clearInterval(t);
-        }, speed);
+        const t = setInterval(() => { if (i < text.length) { el.textContent += text[i++]; } else clearInterval(t); }, speed);
     }
 
     function titleByScore(s) {
@@ -1284,8 +1118,7 @@ function sleep(ms) {
     }
 
     function resetModal() {
-        selectedFile = null;
-        currentResults = null;
+        selectedFile = null; currentResults = null;
         document.getElementById('fileInput').value = '';
         document.getElementById('uploadPlaceholder').style.display = 'block';
         document.getElementById('uploadPreview').style.display = 'none';
@@ -1295,6 +1128,7 @@ function sleep(ms) {
         document.getElementById('scoreSubtitle').style.display = 'block';
         document.getElementById('starsRow').style.display = 'block';
         document.getElementById('errorBlock').style.display = 'none';
+        document.getElementById('modelIndicator').textContent = '';
         for (let i = 1; i <= 5; i++) {
             const el = document.getElementById('lc' + i);
             if (el) { el.classList.remove('done'); el.style.opacity = '0.3'; }
@@ -1305,7 +1139,7 @@ function sleep(ms) {
     function shareResults() {
         if (!currentResults) return;
         const score = currentResults.score;
-        const roast = (currentResults.roast || '').substring(0, 100) + '...';
+        const roast = (currentResults.roast || '').substring(0, 120) + '...';
         const text = `🏠 My room got roasted by AI — ${score}/10\n\n"${roast}"\n\nCheck yours at roomroast.app`;
         if (navigator.share) {
             navigator.share({ title: 'Room Roast AI', text, url: window.location.href });
@@ -1315,16 +1149,13 @@ function sleep(ms) {
     }
 
     // ── NAV ────────────────────────────────────
-    const navbar = document.getElementById('navbar');
     window.addEventListener('scroll', () => {
-        navbar.classList.toggle('scrolled', window.scrollY > 60);
+        document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 60);
     });
-
     document.getElementById('hamburger').addEventListener('click', () => {
         document.getElementById('mobileMenu').classList.add('open');
         document.body.style.overflow = 'hidden';
     });
-
     function closeMobileMenu() {
         document.getElementById('mobileMenu').classList.remove('open');
         document.body.style.overflow = '';
@@ -1339,67 +1170,49 @@ function sleep(ms) {
 
     // ── COUNTERS ───────────────────────────────
     function animCount(el, target) {
-        const start = performance.now();
-        const dur = 2000;
+        const start = performance.now(), dur = 2000;
         (function tick(now) {
             const p = Math.min((now - start) / dur, 1);
-            const v = Math.floor((1 - Math.pow(1 - p, 3)) * target);
-            el.textContent = v.toLocaleString();
-            if (p < 1) requestAnimationFrame(tick);
-            else el.textContent = target.toLocaleString();
+            el.textContent = Math.floor((1 - Math.pow(1 - p, 3)) * target).toLocaleString();
+            if (p < 1) requestAnimationFrame(tick); else el.textContent = target.toLocaleString();
         })(start);
     }
     const co = new IntersectionObserver(entries => {
-        entries.forEach(e => {
-            if (e.isIntersecting && e.target.dataset.count) {
-                animCount(e.target, parseInt(e.target.dataset.count));
-                co.unobserve(e.target);
-            }
-        });
+        entries.forEach(e => { if (e.isIntersecting && e.target.dataset.count) { animCount(e.target, parseInt(e.target.dataset.count)); co.unobserve(e.target); } });
     }, { threshold: 0.5 });
     document.querySelectorAll('[data-count]').forEach(el => co.observe(el));
 
     // ── SCORE RING ─────────────────────────────
     const sro = new IntersectionObserver(entries => {
-        entries.forEach(e => {
-            if (e.isIntersecting) {
-                document.getElementById('scoreRing').style.strokeDashoffset = 502 - (5.1 / 10) * 502;
-                sro.unobserve(e.target);
-            }
-        });
+        entries.forEach(e => { if (e.isIntersecting) { document.getElementById('scoreRing').style.strokeDashoffset = 502 - (5.1 / 10) * 502; sro.unobserve(e.target); } });
     }, { threshold: 0.5 });
     const ring = document.querySelector('.score-ring-container');
     if (ring) sro.observe(ring);
 
-    // ── BEFORE/AFTER SLIDER ────────────────────
+    // ── BEFORE/AFTER ───────────────────────────
     const baCon = document.getElementById('baContainer');
     const baAft = document.getElementById('baAfter');
     const baDivEl = document.getElementById('baDivider');
     let dragging = false;
-
     function moveSlider(x) {
         const r = baCon.getBoundingClientRect();
         const pct = Math.max(0, Math.min((x - r.left) / r.width, 1)) * 100;
         baAft.style.clipPath = `inset(0 ${100 - pct}% 0 0)`;
         baDivEl.style.left = pct + '%';
     }
-
     baCon.addEventListener('mousedown', e => { dragging = true; moveSlider(e.clientX); });
     document.addEventListener('mousemove', e => { if (dragging) moveSlider(e.clientX); });
     document.addEventListener('mouseup', () => dragging = false);
     baCon.addEventListener('touchstart', e => { dragging = true; moveSlider(e.touches[0].clientX); }, { passive: true });
     document.addEventListener('touchmove', e => { if (dragging) moveSlider(e.touches[0].clientX); }, { passive: true });
     document.addEventListener('touchend', () => dragging = false);
-
     let autoBA;
     const bao = new IntersectionObserver(entries => {
         entries.forEach(e => {
             if (e.isIntersecting) {
                 let pos = 0, dir = 1;
                 autoBA = setInterval(() => {
-                    pos += dir * 0.8;
-                    if (pos >= 100) dir = -1;
-                    if (pos <= 0) dir = 1;
+                    pos += dir * 0.8; if (pos >= 100) dir = -1; if (pos <= 0) dir = 1;
                     const r = baCon.getBoundingClientRect();
                     moveSlider(r.left + (pos / 100) * r.width);
                 }, 20);
@@ -1415,9 +1228,7 @@ function sleep(ms) {
     function switchBudget(btn, budget) {
         document.querySelectorAll('.budget-tab').forEach(t => t.classList.remove('active'));
         btn.classList.add('active');
-        document.querySelectorAll('.fix-card').forEach(c => {
-            c.style.display = c.dataset.budget === budget ? 'block' : 'none';
-        });
+        document.querySelectorAll('.fix-card').forEach(c => { c.style.display = c.dataset.budget === budget ? 'block' : 'none'; });
     }
 
     // ── FAQ ────────────────────────────────────
@@ -1441,30 +1252,3 @@ function sleep(ms) {
 </script>
 </body>
 </html>
-```
-
----
-
-## Куда вставить ключ
-
-Найди в коде эту строку — она одна, в самом начале `<script>`:
-
-```javascript
-const GEMINI_API_KEY = 'ТВОЙ_КЛЮЧ_СЮДА';
-```
-
-Замени `ТВОЙ_КЛЮЧ_СЮДА` на свой ключ:
-
-```javascript
-const GEMINI_API_KEY = 'AIzaSyB_xxxxxxxxxxxxxxxxxxxxxxxxxxxx';
-```
-
-**Где взять ключ бесплатно:**
-```
-1. Открой → aistudio.google.com
-2. Войди через Google аккаунт
-3. Нажми "Get API Key" → "Create API Key"
-4. Скопируй ключ (начинается с AIzaSy...)
-5. Вставь вместо ТВОЙ_КЛЮЧ_СЮДА
-6. Сохрани файл — всё работает
-```
